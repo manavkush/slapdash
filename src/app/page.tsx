@@ -30,7 +30,7 @@ export default function Home() {
               Login to Your Account <FontAwesomeIcon className='fa-shake' icon={faArrowRight}></FontAwesomeIcon>
             </Button>
           </div>
-          <p>Don`&apos;`t have a account? Register Now!</p>
+          <p>Don&apos;t have a account? Register Now!</p>
         </div>
         <div className='d-flex'>
         <div className={styles.vr}></div>
