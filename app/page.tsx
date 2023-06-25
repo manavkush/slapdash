@@ -1,95 +1,55 @@
-import Image from 'next/image'
+'use client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import styles from './page.module.css'
+import { Button, Input } from 'reactstrap'
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className={styles.loginContainer}>
+      <div className={styles.loginHeading}>Login to Your Account</div>
+      <div className={styles.formWrapper}>
+        <div className={styles.loginForm}>
+          <div className={styles.username}>
+            <Input 
+              className={styles.usernameInput}
+              type="text"
+              name="username"
+              placeholder="username" />
+          </div>
+          <div className={styles.password}>
+              <Input 
+              className={styles.passwordInput}
+              type="text"
+              name="password"
+              placeholder="password" />
+          </div>
+          <div >
+            <Button className={styles.loginButton}>
+              Login to Your Account <FontAwesomeIcon className='fa-shake' icon={faArrowRight}></FontAwesomeIcon>
+            </Button>
+          </div>
+          <p>Don't have a account? Register Now!</p>
+        </div>
+        <div className='d-flex'>
+        <div className={styles.vr}></div>
+      </div>
+
+        <div className={styles.externalLogin}>
+          <div className={styles.loginGoogle}>
+            <Button>
+            <FontAwesomeIcon className={`${styles.faIcon} fa-bounce`} icon={faGoogle}></FontAwesomeIcon>  Login with Google 
+            </Button>
+          </div>
+          <div className={styles.loginFacebook}>
+            <Button>
+            <FontAwesomeIcon className={`${styles.faIcon} fa-bounce`} icon={faFacebook}></FontAwesomeIcon>  Login with Facebook
+            </Button>
+          </div>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      <div className={styles.forgotPassword}>Forgot Password</div>
+    </div>
   )
 }
