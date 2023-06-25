@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import './globals.css'
 import { Inter, Space_Grotesk } from 'next/font/google'
+import 'bootstrap/dist/css/bootstrap.css'
 
 const inter = Inter({ subsets: ['latin'] })
 const spaceGrotesk = Space_Grotesk({subsets: ["latin"]})
