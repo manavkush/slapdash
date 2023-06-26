@@ -4,9 +4,12 @@ import { faGoogle, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import styles from './page.module.css'
 import { Button, Input } from 'reactstrap'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import Navbar from '../components/Navbar';
 
 export default function Home() {
   return (
+    <>
+    <Navbar />
     <div className={styles.loginContainer}>
       <div className={styles.loginHeading}>Login to Your Account</div>
       <div className={styles.formWrapper}>
@@ -51,5 +54,6 @@ export default function Home() {
       </div>
       <div className={styles.forgotPassword}>Forgot Password</div>
     </div>
+    </>
   )
 }
