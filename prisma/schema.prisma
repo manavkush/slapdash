@@ -6,42 +6,42 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model User{
-  uid String @id @default(uuid()) @map("_id")
-  userName String @unique
-  password String  //Check in frontend for not null
-  bio String
+model User {
+  uid        String              @id @default(uuid())
+  userName   String              @unique
+  password   String //Check in frontend for not null
+  bio        String
   profilePic String
-  channelId String[]
-  channels Channel[] @relation(fields: [channelId], references: [id])
-  channelConfig ChannelConfig[]
+  config     ChannelUserConfig[]
 }
 
-model Channel{
-  id String @id @default(uuid()) @map("_id")
-  channelName String @unique
-  userId String[]
-  users User[] @relation(fields: [userId], references: [uid])
-  messages Message[]
+model Channel {
+  id          String              @id @default(uuid())
+  channelName String              @unique
+  messages    Message[]
+  config      ChannelUserConfig[]
 }
 
-model Message{
-  id String @id @default(uuid()) @map("_id")
-  text String
-  channelId String
-  channel Channel @relation(fields: [channelId], references: [id])
+model Message {
+  id                String   @id @default(uuid())
+  text              String
+  channelId         String
+  channel           Channel  @relation(fields: [channelId], references: [id])
   creationTimestamp DateTime @default(now())
 }
 
-model ChannelConfig{
-  id String @id @default(uuid()) @map("_id") 
-  channelId String
-  permission String
-  uid String
-  user User @relation(fields: [uid], references: [uid])
+model ChannelUserConfig {
+  channelId         String
+  uid               String   @unique
+  permission        String
+  user              User     @relation(fields: [uid], references: [uid])
+  channel           Channel  @relation(fields: [channelId], references: [id])
   lastSeenTimeStamp DateTime
+
+  @@id([channelId, uid])
 }
