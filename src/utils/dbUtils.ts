@@ -70,6 +70,7 @@ export const insertUserInDB = async (user: User) => {
     const password = hash(user.password, 12)
     // TODO: Need to add functionality to insert user in the DB
 
+
     res = {
         inserted: true,
         message: "Inserted user into DB."
