@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient, User, Channel, ChannelConfig } from "@prisma/client";
 import {hash} from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -69,6 +69,24 @@ export const insertUserInDB = async (user: User) => {
     
     const password = hash(user.password, 12)
     // TODO: Need to add functionality to insert user in the DB
+
+    await prisma.user.upsert({
+        create: {
+            uid: user.uid,
+            userName: user.userName,
+            password: user.password,
+            bio: user.bio,
+            profilePic: user.profilePic,
+            channelId: [],
+            channels: new Channel(),
+            channelConfig: new ChannelConfig()
+        },
+        where: {
+            uid: undefined,
+            userName: undefined
+        },
+        update: {}
+    })
 
     res = {
         inserted: true,
