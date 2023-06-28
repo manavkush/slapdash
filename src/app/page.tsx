@@ -4,7 +4,7 @@ import { faGoogle, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import styles from './page.module.css'
 import { Button, Input } from 'reactstrap'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar/Navbar';
 
 export default function Home() {
   return (
