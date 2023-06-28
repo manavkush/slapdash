@@ -13,6 +13,7 @@ datasource db {
 model User{
   uid String @id @default(uuid()) @map("_id")
   userName String @unique
+  password String  //Check in frontend for not null
   bio String
   profilePic String
   channelId String[]
