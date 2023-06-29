@@ -15,6 +15,7 @@ model User {
   uid        String              @id @default(uuid())
   userName   String              @unique
   password   String //Check in frontend for not null
+  name       String
   bio        String
   profilePic String
   config     ChannelUserConfig[]
