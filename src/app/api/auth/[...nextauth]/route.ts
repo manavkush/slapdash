@@ -1,6 +1,8 @@
 import NextAuth, {type NextAuthOptions} from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { authenticateUser, getUserInfoFromDB, insertUserInDB } from "@/src/utils/dbUtils"
+import { User } from "@prisma/client"
 
 const authOptions: NextAuthOptions = {
     session: {
@@ -15,12 +17,19 @@ const authOptions: NextAuthOptions = {
             name: "credentials",
             credentials: {
                 username: { label: "Username", type: "text", placeholder: "username" },
-                password: { label: "Password", type: "password" }
+                password: { label: "Password", type: "password", placeholder: "password" }
             },
             async authorize(credentials) {
-                const user = { id: "1", name: "Saloni", email: "test@test.com"}
-                console.log(user)
-                return user
+                let userFromDb = await authenticateUser(credentials?.username!, credentials?.password!)
+                let returnUser = userFromDb ? {
+                    "id" : userFromDb.id,
+                    "username": userFromDb.username,
+                    "bio": userFromDb.bio,
+                    "name": userFromDb.name,
+                    "profilePic": userFromDb.profilePic
+                } : null
+                
+                return returnUser
             },
         })
     ]
