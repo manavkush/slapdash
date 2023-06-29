@@ -67,9 +67,16 @@ export const insertUserInDB = async (user: User) => {
         return res
     }
     
-    const password = hash(user.password, 12)
-    // TODO: Need to add functionality to insert user in the DB
-
+    const password = await hash(user.password, 12)
+    prisma.user.create({
+        data:{
+            uid:user.uid,
+            profilePic:user.profilePic,
+            userName:user.userName,
+            bio:user.bio,
+            password:password
+        }
+    })
 
     res = {
         inserted: true,
