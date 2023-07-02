@@ -1,6 +1,6 @@
 .loginContainer{
   background: #1D1D1F;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .loginHeading{
@@ -38,6 +38,11 @@
   line-height: 1.5rem;
   letter-spacing: 0.03125rem;
   margin: 1rem;
+  margin: auto;
+}
+
+.loginGoogle {
+  margin-bottom: 1rem;
 }
 
 .username, .password{
@@ -48,7 +53,7 @@
   border-radius: 8px;
   background: #222;
   border: 0px;
-  margin: 1rem;
+  /* margin: 1rem; */
 }
 .usernameInput, .passwordInput{
   display: flex;
@@ -81,7 +86,7 @@
   font-family: Inter;
   line-height: 1.5rem;
   letter-spacing: 0.03125rem;
-  margin: 1rem;
+  margin: 1rem 0;
 }
 
 .loginForm p{
@@ -89,6 +94,10 @@
     margin-bottom: 1rem;
     margin-left: 1rem;
     color: silver;
+}
+
+.loginForm div{
+  width: 432px;
 }
 
 .faIcon{
@@ -107,6 +116,12 @@
   color: #FFF;
   text-align: center;
   font-size: 1.2rem;
+}
+
+@media screen and (max-width : 1000px) {
+  .formWrapper {
+    flex-direction: column;
+  }
 }
 
 /* Enable hover only on non-touch devices */
