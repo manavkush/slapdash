@@ -2,6 +2,8 @@ import Link from 'next/link'
 import './globals.css'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import 'bootstrap/dist/css/bootstrap.css'
+import Navbar from '../components/Navbar/Navbar'
+// import { providers, signIn, getSession, csrfToken } from "next-auth/client";
 
 const inter = Inter({ subsets: ['latin'] })
 const spaceGrotesk = Space_Grotesk({subsets: ["latin"]})
@@ -18,7 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className } ${spaceGrotesk.className}`}>{children}</body>
+      <body className={`${inter.className } ${spaceGrotesk.className}`}>
+        <Navbar />
+        {children}
+      </body>
     </html>
   )
 }
