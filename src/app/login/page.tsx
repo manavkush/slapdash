@@ -34,7 +34,7 @@ export default function Login() {
         <div className={styles.loginHeading}>Login to Your Account</div>
         <div className={styles.formWrapper}>
           <div className={styles.loginForm}>
-            <form onSubmit={handleSubmit(submitData)}>
+            <form onSubmit={handleSubmit(submitData)} >
               <div className={styles.username}>
                 <input
                   className={styles.usernameInput}
