@@ -1,0 +1,43 @@
+.registerContainer{
+    background: #1D1D1F;
+    min-height: 100vh;
+}
+
+.registerForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+.userInput{
+    margin:0.5rem;
+    width:100%;
+    border-radius: 8px;
+    border: #1D1D1F;
+    font-family: Inter;
+    padding-left: 1rem;
+    font-size: 1.5rem;
+    height: 4rem;
+}
+
+.registerButton{
+    width: 12rem;
+    height: 3.5rem;
+    margin:1rem;
+    font-size: 1.5rem;
+}
+
+.registerContainer p{
+    color: white;
+    margin:auto;
+    text-align: center;
+    font-size: 12px;
+}
+
+.registerHeading{
+    color: white;
+    text-align: center;
+    padding-top: 2rem;
+    font-size: 3rem;
+}
