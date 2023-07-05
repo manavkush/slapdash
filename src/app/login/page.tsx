@@ -7,13 +7,15 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { signIn } from "next-auth/react";
+import { useCallback } from "react";
 
 const formSchema = z.object({
   username: z.string(),
   password: z.string(),
 });
 
-type FormSchema = z.input<typeof formSchema>;
+type FormSchema = z.infer<typeof formSchema>;
 
 export default function Login() {
   const { register, handleSubmit, formState } = useForm<FormSchema>({
@@ -23,9 +25,32 @@ export default function Login() {
   
   const {errors} = formState
 
-  const submitData:SubmitHandler<FormSchema> = (data: FormSchema) => {
-    console.log(data)
-  };
+  const submitData:SubmitHandler<FormSchema> =useCallback( async (data: FormSchema) => {
+    // const options = {
+    //   // The method is POST because we are sending data.
+    //   method: 'POST',
+    //   // Tell the server we're sending JSON.
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   // Body of the request is the JSON data we created above.
+    //   body: JSON.stringify(data),
+    // }
+    // console.log("Input data:", data)
+
+    // const response = await fetch("/api/auth/login", options)
+
+    // console.log("Result:",response)
+    const res = await signIn("credentials", {
+      redirect: false,
+      ...data,
+    })
+
+    console.log(res)
+    // if(res?.error) {
+    //   console.log("Error: ", error)
+    // }
+  },[]);
   
   
   return (
@@ -46,7 +71,7 @@ export default function Login() {
               <div className={styles.password}>
                 <input
                   className={styles.passwordInput}
-                  type="text"
+                  type="password"
                   placeholder="password"
                   {...register('password')}
                 />

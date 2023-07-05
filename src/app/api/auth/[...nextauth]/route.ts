@@ -16,10 +16,11 @@ const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "credentials",
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "username" },
-                password: { label: "Password", type: "password", placeholder: "password" }
-            },
+                username: { label: "username", type: "text", placeholder: "username" },
+                password: { label: "password", type: "password", placeholder: "password" }
+            }, 
             async authorize(credentials) {
+                console.log("Credentials: ", credentials)
                 let userFromDb = await authenticateUser(credentials?.username!, credentials?.password!)
                 let returnUser = userFromDb ? {
                     "id" : userFromDb.id,
@@ -32,7 +33,7 @@ const authOptions: NextAuthOptions = {
                 return returnUser
             },
         })
-    ]
+    ],
 }
 
 const handler = NextAuth(authOptions)
