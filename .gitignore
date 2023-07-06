@@ -40,4 +40,12 @@ next-env.d.ts
 
 #git
 [alias]   diff = diff --ignore-space-change
+.idea/inspectionProfiles/Project_Default.xml
+.gitignore
+.gitignore
+.idea/slapdash.iml
+.gitignore
+.gitignore
+.idea/modules.xml
+.idea/vcs.xml
 .idea/workspace.xml

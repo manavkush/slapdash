@@ -12,7 +12,7 @@ const formSchema = z.object({
     confirmPassword: z.string()
   });
   
-  type FormSchema = z.input<typeof formSchema>;
+  type FormSchema = z.infer<typeof formSchema>;
 
 export default function Register(){
     const { register, handleSubmit, formState } = useForm<FormSchema>({
