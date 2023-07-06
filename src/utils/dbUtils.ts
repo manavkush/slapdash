@@ -1,6 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import { hash, compare } from "bcrypt";
 import { profile } from "console";
+import { RegisterOrUpdateUserRequestType } from "./types";
 
 const prisma = new PrismaClient();
 
@@ -32,7 +33,7 @@ export async function authenticateUser(username: string, password: string) {
 
 
 // TODO: signup username availability
-export const checkUserPresentInDB = async (username: string) => {
+export const checkUserPresentInDB = async (username: string): Promise<boolean> => {
     const user = await prisma.user.findFirst({
         where: {
             userName: username
@@ -67,33 +68,33 @@ interface TypeInsertUserInDB {
 // TODO: Add the type to the parameter instead of the user as 
 // no id will be passed at the time of creating of the user 
 // from the server
-export const insertUserInDB = async (user: User) => {
-    const userPresent = await checkUserPresentInDB(user.userName)
+export const insertUserInDB = async (user: RegisterOrUpdateUserRequestType) => {
     
     let res: TypeInsertUserInDB
-
-    if (userPresent) {
+    try {
+        const password = await hash(user.password, 12)
+        await prisma.user.create({
+            data: {
+                name: user.name,
+                profilePic: "",
+                userName: user.username,
+                bio: "",
+                password: password
+            }
+        })
+        res = {
+            status: true,
+            message: "Inserted user into DB."
+        }
+    } catch(e:any) {
         res = {
             status: false,
-            message: "Insert Failed. Username not available"
+            message: "Insert Failed. " + e.message,
         }
-        return res
     }
 
-    const password = await hash(user.password, 12)
-    await prisma.user.create({
-        data: {
-            name: user.name,
-            profilePic: user.profilePic,
-            userName: user.userName,
-            bio: user.bio,
-            password: password
-        }
-    })
+    
 
-    res = {
-        status: true,
-        message: "Inserted user into DB."
-    }
+    
     return res
 }

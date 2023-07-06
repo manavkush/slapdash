@@ -23,3 +23,11 @@ export interface UserLoginResponse {
     status: string;
     token: string;
 }
+
+export interface RegisterOrUpdateUserRequestType {
+    username: string;
+    name: string;
+    password: string;
+    bio?: string;
+    profilePic?: string;
+}
