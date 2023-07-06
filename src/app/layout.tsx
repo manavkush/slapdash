@@ -4,6 +4,7 @@ import { Inter, Space_Grotesk } from 'next/font/google'
 import 'bootstrap/dist/css/bootstrap.css'
 import Navbar from '../components/Navbar/Navbar'
 // import { providers, signIn, getSession, csrfToken } from "next-auth/client";
+import { NextAuthProvider } from './providers'
 
 const inter = Inter({ subsets: ['latin'] })
 const spaceGrotesk = Space_Grotesk({subsets: ["latin"]})
@@ -21,8 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className } ${spaceGrotesk.className}`}>
+        <NextAuthProvider>
         <Navbar />
         {children}
+        </NextAuthProvider>
       </body>
     </html>
   )
