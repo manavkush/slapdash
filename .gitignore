@@ -40,3 +40,4 @@ next-env.d.ts
 
 #git
 [alias]   diff = diff --ignore-space-change
+.idea/workspace.xml
