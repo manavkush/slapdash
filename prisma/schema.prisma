@@ -34,6 +34,8 @@ model Message {
   channelId         String
   channel           Channel  @relation(fields: [channelId], references: [id])
   creationTimestamp DateTime @default(now())
+
+  @@index([channelId])
 }
 
 model ChannelUserConfig {
@@ -45,4 +47,5 @@ model ChannelUserConfig {
   lastSeenTimeStamp DateTime
 
   @@id([channelId, uid])
+  @@index([channelId])
 }
