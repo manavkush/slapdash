@@ -1,5 +1,5 @@
 import { NextAuthOptions } from "next-auth";
-import { authenticateUser } from "./dbUtils";
+import { authenticateUser } from "../utils/dbUtils";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google"
 
