@@ -68,9 +68,9 @@ interface TypeInsertUserInDB {
 // TODO: Add the type to the parameter instead of the user as 
 // no id will be passed at the time of creating of the user 
 // from the server
-export const insertUserInDB = async (user: RegisterOrUpdateUserRequestType) => {
+export const insertUserInDB = async (user: TypeRegisterOrUpdateUserRequest) => {
     
-    let res: TypeInsertUserInDB
+    let res: TypeInsertUserInDBResponse
     try {
         const password = await hash(user.password, 12)
         await prisma.user.create({
@@ -93,8 +93,5 @@ export const insertUserInDB = async (user: RegisterOrUpdateUserRequestType) => {
         }
     }
 
-    
-
-    
     return res
 }

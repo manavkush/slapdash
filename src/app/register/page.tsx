@@ -4,9 +4,9 @@ import styles from "./page.module.css";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { checkUserPresentInDB, insertUserInDB } from "@/src/utils/dbUtils";
-import { RegisterOrUpdateUserRequestType } from "@/src/utils/types"
-import { useRouter } from "next/router";
+import { TypeRegisterOrUpdateUserRequest } from "@/src/utils/types"
+import { redirect } from "next/navigation";
+import {NextResponse} from "next/server";
 
 const formSchema = z.object({
   username: z.string().min(3, "Minimum length 3 required"),
@@ -16,37 +16,61 @@ const formSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"]
-}).refine(async (data) => await checkUserPresentInDB(data.username), {
-    message: "Username unavailable",
-    path: ["username"]
-});
+})
+// .refine(async (data) => {
+//
+//   const requestOptions: RequestInit = {
+//     method: "POST",
+//     headers: {
+//       "Content-Type" : "application/json"
+//     },
+//     body: JSON.stringify({ username: data.username })
+//   }
+//   const res = await fetch("/api/userpresent", requestOptions)
+//   const body = await res.json()
+//   console.log(body)
+//
+//   return false
+// }, {
+//     message: "Username unavailable",
+//     path: ["username"]
+// });
 
 type FormSchema = z.infer<typeof formSchema>;
 
 export default function Register() {
-  // zod checking definition
+
   const { register, handleSubmit, formState } = useForm<FormSchema>({
     mode: "onSubmit",
     resolver: zodResolver(formSchema),
   });
 
   const { errors } = formState;
-  const router = useRouter();
 
   const submitData: SubmitHandler<FormSchema> = async (data: FormSchema) => {
-    const user:RegisterOrUpdateUserRequestType = {
+    const user:TypeRegisterOrUpdateUserRequest = {
         name: data.name,
         username: data.username,
         password: data.password
     }
-    const res = await insertUserInDB(user);
-    if (!res?.status) {
-        router.push("/")
-    } else {
-        console.log("Errors: ", res.message)
-    }
-  };
 
+    const options: RequestInit = {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify(user)
+    }
+
+    const res:Response = await fetch("/api/register", options)
+    const json = await res.json()
+    console.log(json)
+    // if (!res?.status) {
+    //     redirect("/")
+    // } else {
+    //     console.log("Errors: ", res.message)
+    // }
+  };
   return (
     <>
       <div className={styles.registerContainer}>

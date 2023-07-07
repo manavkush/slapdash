@@ -12,19 +12,19 @@ export interface FilteredUser {
     config: ChannelUserConfig[]
 }
 
-export interface UserResponse {
+export interface TypeUserResponse {
     status: string;
     data: {
         user: FilteredUser;
     };
 }
 
-export interface UserLoginResponse {
+export interface TypeUserLoginResponse {
     status: string;
     token: string;
 }
 
-export interface RegisterOrUpdateUserRequestType {
+export interface TypeRegisterOrUpdateUserRequest {
     username: string;
     name: string;
     password: string;
