@@ -33,17 +33,15 @@ export async function authenticateUser(username: string, password: string) {
 
 
 // TODO: signup username availability
-export const checkUserPresentInDB = async (username: string): Promise<boolean> => {
+export const checkUsernamePresentInDB = async (username: string): Promise<boolean> => {
+
     const user = await prisma.user.findFirst({
         where: {
             userName: username
         }
     })
-    if (user === null) {
-        return false;
-    } else {
-        return true;
-    }
+
+    return !!user;
 }
 
 // TODO: Add return type for the function
