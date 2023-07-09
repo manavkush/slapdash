@@ -31,3 +31,20 @@ export interface TypeRegisterOrUpdateUserRequest {
     bio?: string;
     profilePic?: string;
 }
+
+export interface TypeRegisterOrUpdateUserResponse {
+    status: boolean,
+    message?: {
+        error?: string
+    }
+}
+
+export interface TypeInsertUserInDBResponse {
+    status: boolean,
+    message?: string
+}
+
+export interface TypeCheckUsernamePresentResponse {
+    isUsernamePresent: boolean,
+    message?: string
+}

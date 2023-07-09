@@ -4,9 +4,9 @@ import styles from "./page.module.css";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TypeRegisterOrUpdateUserRequest } from "@/src/utils/types"
+import {TypeRegisterOrUpdateUserRequest, TypeRegisterOrUpdateUserResponse} from "@/src/utils/types"
 import { redirect } from "next/navigation";
-import {NextResponse} from "next/server";
+import { ToastContainer, toast } from 'react-toastify';
 
 const formSchema = z.object({
   username: z.string().min(3, "Minimum length 3 required"),
@@ -17,25 +17,6 @@ const formSchema = z.object({
     message: "Passwords do not match",
     path: ["confirmPassword"]
 })
-// .refine(async (data) => {
-//
-//   const requestOptions: RequestInit = {
-//     method: "POST",
-//     headers: {
-//       "Content-Type" : "application/json"
-//     },
-//     body: JSON.stringify({ username: data.username })
-//   }
-//   const res = await fetch("/api/userpresent", requestOptions)
-//   const body = await res.json()
-//   console.log(body)
-//
-//   return false
-// }, {
-//     message: "Username unavailable",
-//     path: ["username"]
-// });
-
 type FormSchema = z.infer<typeof formSchema>;
 
 export default function Register() {
@@ -47,6 +28,7 @@ export default function Register() {
 
   const { errors } = formState;
 
+  const notify = () => toast("Wow")
   const submitData: SubmitHandler<FormSchema> = async (data: FormSchema) => {
     const user:TypeRegisterOrUpdateUserRequest = {
         name: data.name,
@@ -63,16 +45,39 @@ export default function Register() {
     }
 
     const res:Response = await fetch("/api/register", options)
-    const json = await res.json()
-    console.log(json)
-    // if (!res?.status) {
-    //     redirect("/")
-    // } else {
-    //     console.log("Errors: ", res.message)
-    // }
+    const resObj:TypeRegisterOrUpdateUserResponse = await res.json()
+    console.log(resObj)
+    if (!resObj?.status) {
+        redirect("/")
+    } else {
+      toast.error('Username already taken. Choose different username', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      console.log("Errors: ", resObj.message?.error)
+    }
   };
+
   return (
     <>
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+      />
       <div className={styles.registerContainer}>
         <div className={styles.registerHeading}>Register</div>
         <form
