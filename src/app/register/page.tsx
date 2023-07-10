@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {TypeRegisterOrUpdateUserRequest, TypeRegisterOrUpdateUserResponse} from "@/src/utils/types"
 import { redirect } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const formSchema = z.object({
   username: z.string().min(3, "Minimum length 3 required"),
@@ -28,7 +29,6 @@ export default function Register() {
 
   const { errors } = formState;
 
-  const notify = () => toast("Wow")
   const submitData: SubmitHandler<FormSchema> = async (data: FormSchema) => {
     const user:TypeRegisterOrUpdateUserRequest = {
         name: data.name,
@@ -66,6 +66,8 @@ export default function Register() {
 
   return (
     <>
+      <div className={styles.registerContainer}>
+        
       <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -78,7 +80,6 @@ export default function Register() {
           pauseOnHover
           theme="light"
       />
-      <div className={styles.registerContainer}>
         <div className={styles.registerHeading}>Register</div>
         <form
           onSubmit={handleSubmit(submitData)}
