@@ -1,7 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import { hash, compare } from "bcrypt";
 import { profile } from "console";
-import { RegisterOrUpdateUserRequestType } from "./types";
+import { TypeInsertUserInDBResponse, TypeRegisterOrUpdateUserRequest } from "./types";
 
 const prisma = new PrismaClient();
 
