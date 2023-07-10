@@ -12,22 +12,39 @@ export interface FilteredUser {
     config: ChannelUserConfig[]
 }
 
-export interface UserResponse {
+export interface TypeUserResponse {
     status: string;
     data: {
         user: FilteredUser;
     };
 }
 
-export interface UserLoginResponse {
+export interface TypeUserLoginResponse {
     status: string;
     token: string;
 }
 
-export interface RegisterOrUpdateUserRequestType {
+export interface TypeRegisterOrUpdateUserRequest {
     username: string;
     name: string;
     password: string;
     bio?: string;
     profilePic?: string;
+}
+
+export interface TypeRegisterOrUpdateUserResponse {
+    status: boolean,
+    message?: {
+        error?: string
+    }
+}
+
+export interface TypeInsertUserInDBResponse {
+    status: boolean,
+    message?: string
+}
+
+export interface TypeCheckUsernamePresentResponse {
+    isUsernamePresent: boolean,
+    message?: string
 }
