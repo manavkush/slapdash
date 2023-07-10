@@ -14,7 +14,21 @@ const formSchema = z.object({
   name: z.string().min(3, "Minimum length 3 required"),
   password: z.string().min(3, "Minimum length 3 required"),
   confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine((data) => { 
+  if (data.confirmPassword !== data.password){
+    toast.error('Passwords do not match. Please check again', {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
+  return(data.password === data.confirmPassword)
+}, {
     message: "Passwords do not match",
     path: ["confirmPassword"]
 })
