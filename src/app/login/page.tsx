@@ -10,6 +10,8 @@ import { z } from "zod";
 import { signIn } from "next-auth/react";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const formSchema = z.object({
   username: z.string(),
@@ -39,6 +41,16 @@ export default function Login() {
       if (!res?.error) {
         router.push("/")
       } else {
+        toast.error('Incorrect username or password. Check again.', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         console.log("Errors: ", res.error)
       }
     } catch(error: any) {
@@ -50,6 +62,18 @@ export default function Login() {
   return (
     <>
       <div className={styles.loginContainer}>
+      <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+      />
         <div className={styles.loginHeading}>Login to Your Account</div>
         <div className={styles.formWrapper}>
           <div className={styles.loginForm}>
