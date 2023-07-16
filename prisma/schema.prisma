@@ -14,7 +14,7 @@ datasource db {
 model User {
   uid        String              @id @default(uuid())
   userName   String              @unique
-  password   String //Check in frontend for not null
+  password   String 
   name       String
   bio        String
   profilePic String
@@ -40,12 +40,13 @@ model Message {
 
 model ChannelUserConfig {
   channelId         String
-  uid               String   @unique
+  uid               String
   permission        String
   user              User     @relation(fields: [uid], references: [uid])
   channel           Channel  @relation(fields: [channelId], references: [id])
-  lastSeenTimeStamp DateTime
+  lastSeenTimeStamp DateTime @default(now())
 
   @@id([channelId, uid])
   @@index([channelId])
+  @@index([uid])
 }

@@ -115,6 +115,8 @@ interface TypeAddUserChannelConfigToDB {
     channelId: string,
     permission: string,
 }
+
+//TODO: Add return type and return response
 export const addUserChannelConfigToDB = async ({uid, channelId, permission} : TypeAddUserChannelConfigToDB) => {
     try {
         const channelUserConfig = await prisma.channelUserConfig.upsert({
@@ -123,12 +125,14 @@ export const addUserChannelConfigToDB = async ({uid, channelId, permission} : Ty
                 channelId: channelId,
                 permission: permission
             },
-            update: {
-
-            },
             where: {
-                uid: uid,
-                channelId: channelId
+                channelId_uid : {
+                    channelId: channelId,
+                    uid: uid
+                }
+            },
+            update: {
+                permission: permission
             }
         })
         
