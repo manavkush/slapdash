@@ -48,3 +48,27 @@ export interface TypeCheckUsernamePresentResponse {
     isUsernamePresent: boolean,
     message?: string
 }
+
+export interface TypeAddChannelUserRequest {
+    channelName: string,
+    users?: string[]
+}
+
+export interface TypeAddChannelUserResponse {
+    status: boolean,
+    message?: string,
+    channelId?: string
+    channelName?: string,
+}
+
+export interface TypeAddChannelRequest {
+    channelName: string,
+    admin: string
+}
+
+export interface TypeAddChannelResponse {
+    status: boolean,
+    message?: string,
+    channelId?: string
+    channelName?: string,
+}

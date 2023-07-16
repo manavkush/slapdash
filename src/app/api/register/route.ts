@@ -9,7 +9,6 @@ import {NextResponse} from "next/server";
 const register = async (req: Request) => {
 
     const user:TypeRegisterOrUpdateUserRequest = await req.json()
-    const {username} = user
 
     const usernamePresent = await checkUsernamePresentInDB(user.username)
 
