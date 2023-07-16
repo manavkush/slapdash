@@ -1,7 +1,7 @@
-import { PrismaClient, User } from "@prisma/client";
+import { Channel, PrismaClient, User } from "@prisma/client";
 import { hash, compare } from "bcrypt";
 import { profile } from "console";
-import { TypeInsertUserInDBResponse, TypeRegisterOrUpdateUserRequest } from "./types";
+import { TypeAddChannelRequest, TypeAddChannelResponse, TypeInsertUserInDBResponse, TypeRegisterOrUpdateUserRequest } from "./types";
 
 const prisma = new PrismaClient();
 
@@ -59,14 +59,7 @@ export const getUserInfoFromDB = async (username: string) => {
 }
 
 
-interface TypeInsertUserInDB {
-    status: boolean,
-    message: string
-}
-// TODO: Add the type to the parameter instead of the user as 
-// no id will be passed at the time of creating of the user 
-// from the server
-export const insertUserInDB = async (user: TypeRegisterOrUpdateUserRequest) => {
+export const insertUserInDB = async (user: TypeRegisterOrUpdateUserRequest):Promise<TypeInsertUserInDBResponse> => {
     
     let res: TypeInsertUserInDBResponse
     try {
@@ -84,12 +77,62 @@ export const insertUserInDB = async (user: TypeRegisterOrUpdateUserRequest) => {
             status: true,
             message: "Inserted user into DB."
         }
-    } catch(e:any) {
+    } catch(error:any) {
         res = {
             status: false,
-            message: "Insert Failed. " + e.message,
+            message: "Insert Failed. " + error.message,
         }
     }
 
     return res
+}
+
+export const createNewChannelInDB = async (channel:TypeAddChannelRequest): Promise<TypeAddChannelResponse> => {
+    let res: TypeAddChannelResponse
+    try{
+        const newChannel: Channel = await prisma.channel.create({
+            data: {
+                channelName: channel.channelName
+            }
+        })
+        res = {
+            status: true,
+            message: "Channel created successfully",
+            channelId: newChannel.id,
+            channelName: newChannel.channelName
+        }
+    } catch(error:any){
+        res={
+            status:false,
+            message: "Channel creation failed: " + error.message
+        }
+    }
+    return res
+}
+
+interface TypeAddUserChannelConfigToDB {
+    uid: string,
+    channelId: string,
+    permission: string,
+}
+export const addUserChannelConfigToDB = async ({uid, channelId, permission} : TypeAddUserChannelConfigToDB) => {
+    try {
+        const channelUserConfig = await prisma.channelUserConfig.upsert({
+            create: {
+                uid: uid,
+                channelId: channelId,
+                permission: permission
+            },
+            update: {
+
+            },
+            where: {
+                uid: uid,
+                channelId: channelId
+            }
+        })
+        
+    } catch (error: any) {
+        
+    }
 }
