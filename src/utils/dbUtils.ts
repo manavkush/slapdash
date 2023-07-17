@@ -1,7 +1,7 @@
 import { Channel, PrismaClient, User } from "@prisma/client";
 import { hash, compare } from "bcrypt";
 import { profile } from "console";
-import { TypeAddChannelRequest, TypeAddChannelResponse, TypeInsertUserInDBResponse, TypeRegisterOrUpdateUserRequest } from "./types";
+import { TypeAddChannelResponse, TypeInsertUserInDBResponse, TypeRegisterOrUpdateUserRequest } from "./types";
 
 const prisma = new PrismaClient();
 
@@ -87,12 +87,12 @@ export const insertUserInDB = async (user: TypeRegisterOrUpdateUserRequest):Prom
     return res
 }
 
-export const createNewChannelInDB = async (channel:TypeAddChannelRequest): Promise<TypeAddChannelResponse> => {
+export const createNewChannelInDB = async (channelName:string): Promise<TypeAddChannelResponse> => {
     let res: TypeAddChannelResponse
     try{
         const newChannel: Channel = await prisma.channel.create({
             data: {
-                channelName: channel.channelName
+                channelName: channelName
             }
         })
         res = {
@@ -116,8 +116,12 @@ interface TypeAddUserChannelConfigToDB {
     permission: string,
 }
 
-//TODO: Add return type and return response
-export const addUserChannelConfigToDB = async ({uid, channelId, permission} : TypeAddUserChannelConfigToDB) => {
+interface TypeAddUserChannelConfigToDBResponse{
+    status: boolean,
+    message: string
+}
+export const addUserChannelConfigToDB = async ({uid, channelId, permission} : TypeAddUserChannelConfigToDB): Promise<TypeAddUserChannelConfigToDBResponse> => {
+    let res: TypeAddUserChannelConfigToDBResponse
     try {
         const channelUserConfig = await prisma.channelUserConfig.upsert({
             create: {
@@ -135,8 +139,16 @@ export const addUserChannelConfigToDB = async ({uid, channelId, permission} : Ty
                 permission: permission
             }
         })
+        res = {
+            status: true,
+            message: "channelUserConfig inserted to DB"
+        }
         
     } catch (error: any) {
-        
+        res = {
+            status: false,
+            message: error.message
+        }
     }
+    return res;
 }
