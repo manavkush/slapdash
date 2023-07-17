@@ -61,11 +61,6 @@ export interface TypeAddChannelUserResponse {
     channelName?: string,
 }
 
-export interface TypeAddChannelRequest {
-    channelName: string,
-    admin: string
-}
-
 export interface TypeAddChannelResponse {
     status: boolean,
     message?: string,

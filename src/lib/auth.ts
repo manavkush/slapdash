@@ -4,9 +4,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google"
 
 export const authOptions: NextAuthOptions = {
+    secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: "/login",
-        
+        signIn: "/login",  
     },
     session: {
         strategy: "jwt",
@@ -22,7 +22,6 @@ export const authOptions: NextAuthOptions = {
                 password: { type: "password"}
             }, 
             async authorize(credentials) {
-                console.log("Credentials: ", credentials)
                 let userFromDb = await authenticateUser(credentials?.username!, credentials?.password!)
                 if (!credentials?.username || !credentials.password) {
                     throw new Error("Invalid credentials")
@@ -40,4 +39,14 @@ export const authOptions: NextAuthOptions = {
             },
         })
     ],
+    callbacks: {
+        jwt: ({token, user }) => {
+            console.log('JWT CALLBACK', token, user)
+            return token
+        },
+        session: ({session, token}) => {
+            console.log('SESSION CALLBACK', token, session)
+            return session
+        }
+    },
 }
