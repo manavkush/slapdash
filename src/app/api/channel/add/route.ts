@@ -9,16 +9,7 @@ import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUt
 const addUser = async (req: Request, res: Response) => {
     // console.log(authOptions)
     const session = await getServerSession(authOptions)
-    
-    // const sessionToken = req.cookies['next-auth.session-token'];
-    const sessionToken = req.headers.get('next-auth.session-token')
-    console.log(sessionToken)
-
-    const decoded = await decode({
-        token: sessionToken!,
-        secret: process.env.NEXTAUTH_SECRET!,
-    });
-    console.log(decoded)
+    console.log("Session: ", session)
 
     if(!session) {
         return NextResponse.json({
