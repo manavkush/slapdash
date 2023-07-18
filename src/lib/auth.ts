@@ -26,27 +26,43 @@ export const authOptions: NextAuthOptions = {
                 if (!credentials?.username || !credentials.password) {
                     throw new Error("Invalid credentials")
                 }
-                
-                let returnUser = userFromDb ? {
-                    id : userFromDb.id,
-                    username: userFromDb.username,
-                    bio: userFromDb.bio,
-                    name: userFromDb.name,
-                    profilePic: userFromDb.profilePic
-                } : null
+                return userFromDb;
+                // let returnUser = userFromDb ? {
+                //     id : userFromDb.id,
+                //     username: userFromDb.username,
+                //     bio: userFromDb.bio,
+                //     name: userFromDb.name,
+                //     profilePic: userFromDb.profilePic
+                // } : null
 
-                return returnUser
+                // return returnUser
             },
         })
     ],
     callbacks: {
-        jwt: ({token, user }) => {
-            console.log('JWT CALLBACK', token, user)
+        jwt: ({token, user}) => {
+            // when we signin, user object is passed (for token creation)
+            // we can use this user object, to pass fields that we want in the token
+            if(user) {
+                // triggered on signin
+                return {
+                    ...token,
+                    id: user.id
+                }
+            }
             return token
         },
         session: ({session, token}) => {
-            console.log('SESSION CALLBACK', token, session)
-            return session
+            // This is called after the JWT callback
+            // This will return a session which can be used by us in the application
+            // via useSession/useServersideSession
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.id,
+                }
+            }
         }
     },
 }
