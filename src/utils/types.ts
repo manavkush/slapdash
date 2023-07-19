@@ -1,5 +1,3 @@
-import { DefaultSession } from "next-auth";
-
 interface ChannelUserConfig {
     channelId: string;
     uid: string;
@@ -53,12 +51,7 @@ export interface TypeCheckUsernamePresentResponse {
 
 export interface TypeAddChannelUserRequest {
     channelName: string,
-    users?: TypeUidAndChannelPermission[]
-}
-
-export interface TypeUidAndChannelPermission {
-    uid: string,
-    permission: string
+    users?: string[]
 }
 
 export interface TypeAddChannelUserResponse {
@@ -73,10 +66,4 @@ export interface TypeAddChannelResponse {
     message?: string,
     channelId?: string
     channelName?: string,
-}
-
-export type TypeSession = DefaultSession & {
-    user: {
-        id: string
-    }
 }
