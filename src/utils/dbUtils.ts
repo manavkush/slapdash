@@ -120,7 +120,7 @@ interface TypeAddUserChannelConfigToDBResponse{
     status: boolean,
     message: string
 }
-export const addUserChannelConfigToDB = async ({uid, channelId, permission} : TypeAddUserChannelConfigToDB): Promise<TypeAddUserChannelConfigToDBResponse> => {
+    export const addUserChannelConfigToDB = async ({uid, channelId, permission} : TypeAddUserChannelConfigToDB): Promise<TypeAddUserChannelConfigToDBResponse> => {
     let res: TypeAddUserChannelConfigToDBResponse
     try {
         const channelUserConfig = await prisma.channelUserConfig.upsert({
