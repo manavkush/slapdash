@@ -3,15 +3,16 @@ import { authOptions } from "@/src/lib/auth";
 import { NextApiRequest, NextApiResponse } from "next";
 import { decode, getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from "next/server";
-import { TypeAddChannelUserRequest } from "@/src/utils/types";
+import { TypeAddChannelUserRequest, TypeSession } from "@/src/utils/types";
 import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
 const addUser = async (req: Request, res: Response) => {
-    // console.log(authOptions)
-    const session = await getServerSession(authOptions)
+
+    const session: TypeSession|null = await getServerSession(authOptions)
     console.log("Session: ", session)
 
     if(!session) {
+        // Not signedIn
         return NextResponse.json({
             status: 401,
             message: {
@@ -19,18 +20,35 @@ const addUser = async (req: Request, res: Response) => {
             }
         })
     }
-    // now the client is logged in
-
+    
     const channelSettings:TypeAddChannelUserRequest = await req.json()
-
-    // const token = await getToken({ req, secret:process.env.NEXTAUTH_SECRET })
-    // console.log(token)
+    const {channelName, users} = channelSettings
 
     try {
-        const createNewChannelInDBRequestResponse = await createNewChannelInDB(channelSettings.channelName)
-
-    } catch (error) {
+        // Create channel
+        // const createNewChannelInDBRequestResponse = await createNewChannelInDB(channelName)
+        // const {status, channelId, message} = createNewChannelInDBRequestResponse
+        const {status, channelId, message} = await createNewChannelInDB(channelName)
         
+        if (status && channelId) {
+            /* 
+                * Channel creation done
+                * Now adding the users to the channel left
+            */
+            // Add creator to channel
+            const uid = session.user.id
+            // addUserToChannel
+            
+            addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: "admin"})
+            // Add others to channel
+            
+            users?.forEach(({}) => {
+                addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: "user"})
+            });
+        }
+        
+    } catch (error: any) {
+        console.log("ERROR:", error)
     }
     //createChannel call
     //addUserToChannel call
