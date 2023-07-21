@@ -1,5 +1,9 @@
 import { DefaultSession } from "next-auth";
 
+export const ADMIN_PERMISSION = "admin"
+export const READ_ONLY_PERMISSION = "read-only"
+export const READ_WRITE_PERMISSION = "read-write"
+
 interface ChannelUserConfig {
     channelId: string;
     uid: string;
@@ -58,7 +62,7 @@ export interface TypeAddChannelUserRequest {
 
 export interface TypeUidAndChannelPermission {
     uid: string,
-    permission: string
+    permission: typeof READ_ONLY_PERMISSION | typeof READ_WRITE_PERMISSION | typeof ADMIN_PERMISSION
 }
 
 export interface TypeAddChannelUserResponse {

@@ -3,7 +3,7 @@ import { authOptions } from "@/src/lib/auth";
 import { NextApiRequest, NextApiResponse } from "next";
 import { decode, getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from "next/server";
-import { TypeAddChannelUserRequest, TypeSession } from "@/src/utils/types";
+import { TypeAddChannelUserRequest, TypeSession, ADMIN_PERMISSION } from "@/src/utils/types";
 import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
 const addUser = async (req: Request, res: Response) => {
@@ -26,8 +26,6 @@ const addUser = async (req: Request, res: Response) => {
 
     try {
         // Create channel
-        // const createNewChannelInDBRequestResponse = await createNewChannelInDB(channelName)
-        // const {status, channelId, message} = createNewChannelInDBRequestResponse
         const {status, channelId, message} = await createNewChannelInDB(channelName)
         
         if (status && channelId) {
@@ -35,23 +33,18 @@ const addUser = async (req: Request, res: Response) => {
                 * Channel creation done
                 * Now adding the users to the channel left
             */
-            // Add creator to channel
+
             const uid = session.user.id
-            // addUserToChannel
+            addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: ADMIN_PERMISSION})
             
-            addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: "admin"})
-            // Add others to channel
-            
-            users?.forEach(({}) => {
-                addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: "user"})
+            users?.forEach(({permission, uid}) => {
+                addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: permission})
             });
         }
         
     } catch (error: any) {
         console.log("ERROR:", error)
     }
-    //createChannel call
-    //addUserToChannel call
 }
 
 export {addUser as GET, addUser as POST}
