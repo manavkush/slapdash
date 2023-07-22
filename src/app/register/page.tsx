@@ -58,7 +58,7 @@ export default function Register() {
       body: JSON.stringify(user)
     }
 
-    const res:Response = await fetch("/api/register", options)
+    const res:Response = await fetch("/api/user/register", options)
     const resObj:TypeRegisterOrUpdateUserResponse = await res.json()
     console.log(resObj)
     if (!resObj?.status) {
