@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { TypeAddChannelUserRequest, TypeSession, ADMIN_PERMISSION } from "@/src/utils/types";
 import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
-const addUser = async (req: Request, res: Response) => {
+const addChannel = async (req: Request, res: Response) => {
 
     const session: TypeSession|null = await getServerSession(authOptions)
     console.log("Session: ", session)
@@ -25,7 +25,6 @@ const addUser = async (req: Request, res: Response) => {
     const {channelName, users} = channelSettings
 
     try {
-        // Create channel
         const {status, channelId, message} = await createNewChannelInDB(channelName)
         
         if (status && channelId) {
@@ -47,4 +46,4 @@ const addUser = async (req: Request, res: Response) => {
     }
 }
 
-export {addUser as GET, addUser as POST}
+export {addChannel as POST}
