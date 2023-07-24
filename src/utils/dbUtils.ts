@@ -5,6 +5,7 @@ import {
     TypeAddChannelResponse,
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserRequest,
+    TypeUpdateUserRequest,
 } from "./types";
 
 const prisma = new PrismaClient();
@@ -35,7 +36,6 @@ export async function authenticateUser(username: string, password: string) {
     return null;
 }
 
-// TODO: signup username availability
 export const checkUsernamePresentInDB = async (
     username: string
 ): Promise<boolean> => {
@@ -48,8 +48,8 @@ export const checkUsernamePresentInDB = async (
     return !!user;
 };
 
-// TODO: Add return type for the function
-export const getUserInfoFromDB = async (username: string) => {
+
+export const getUserInfoFromDB = async (username: string):Promise<User|null> => {
     const user = await prisma.user.findFirst({
         where: {
             userName: username,
@@ -61,6 +61,7 @@ export const getUserInfoFromDB = async (username: string) => {
         return user;
     }
 };
+
 
 export const insertUserInDB = async (
     user: TypeRegisterOrUpdateUserRequest
@@ -90,6 +91,14 @@ export const insertUserInDB = async (
 
     return res;
 };
+
+
+export const updateUserInfoInDB =async (updatedUser:TypeUpdateUserRequest, uid: string) => {
+    // TODO: check if the user needs to update the username, if yes, check if new username available
+    
+    // TODO: Make prisma call to update
+}
+
 
 export const createNewChannelInDB = async (
     channelName: string

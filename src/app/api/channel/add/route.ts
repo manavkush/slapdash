@@ -18,7 +18,7 @@ const addChannel = async (req: Request, res: Response) => {
             message: {
                 error: "Authorization Error: Client not authorized to access api route."
             }
-        })
+        }, {status: 401})
     }
     
     const channelSettings:TypeAddChannelUserRequest = await req.json()
