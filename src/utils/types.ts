@@ -1,15 +1,17 @@
 import { DefaultSession } from "next-auth";
+import { User, ChannelUserConfig } from "@prisma/client";
 
 export const ADMIN_PERMISSION = "admin";
 export const READ_ONLY_PERMISSION = "read-only";
 export const READ_WRITE_PERMISSION = "read-write";
 
-interface ChannelUserConfig {
-    channelId: string;
-    uid: string;
-    permission: string;
-    lastSeenTimeStamp: Date;
-}
+
+// interface ChannelUserConfig2 {
+//     channelId: string;
+//     uid: string;
+//     permission: string;
+//     lastSeenTimeStamp: Date;
+// }
 
 export interface FilteredUser {
     uid: string;
@@ -29,6 +31,8 @@ export interface TypeUserLoginResponse {
     status: string;
     token: string;
 }
+
+export type TypeUpdateUserRequest = Partial<Omit<User, "uid">>
 
 export interface TypeRegisterOrUpdateUserRequest {
     username: string;
