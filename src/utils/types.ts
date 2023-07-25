@@ -32,7 +32,7 @@ export interface TypeUserLoginResponse {
     token: string;
 }
 
-export type TypeUpdateUserRequest = Partial<Omit<User, "uid" | "userName">>
+export type TypeUpdateUserRequest = Partial<Omit<User, "uid">>
 
 export type TypeAddUserChannelConfigToDB = Omit<ChannelUserConfig, "lastSeenTimeStamp">
 
