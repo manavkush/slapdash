@@ -3,6 +3,7 @@ import { hash, compare } from "bcrypt";
 import { profile } from "console";
 import {
     TypeAddChannelResponse,
+    TypeAddUserChannelConfigToDB,
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserRequest,
     TypeUpdateUserRequest,
@@ -83,6 +84,7 @@ export const insertUserInDB = async (
             message: "Inserted user into DB.",
         };
     } catch (error: any) {
+        console.error("ERROR: Error in inserting user to DB.", error)
         res = {
             status: false,
             message: "Insert Failed. " + error.message,
@@ -93,10 +95,24 @@ export const insertUserInDB = async (
 };
 
 
-export const updateUserInfoInDB =async (updatedUser:TypeUpdateUserRequest, uid: string) => {
+export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: string) => {
     // TODO: check if the user needs to update the username, if yes, check if new username available
     
     // TODO: Make prisma call to update
+    try {
+        const updatedUser = await prisma.user.update({
+            where: {
+                uid: uid
+            },
+            data: {
+                ...newUserData
+            }
+        })
+        return updatedUser
+    } catch (error) {
+        console.error("ERROR: Error in updating userinfo.", error)
+        return null
+    }
 }
 
 
@@ -125,11 +141,6 @@ export const createNewChannelInDB = async (
     return res;
 };
 
-interface TypeAddUserChannelConfigToDB {
-    uid: string;
-    channelId: string;
-    permission: string;
-}
 
 interface TypeAddUserChannelConfigToDBResponse {
     status: boolean;
