@@ -96,10 +96,21 @@ export const insertUserInDB = async (
 
 
 export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: string) => {
-    // TODO: check if the user needs to update the username, if yes, check if new username available
+    // TODO: check if the user needs to update the username, if yes, check if new username available;
     
     // TODO: Make prisma call to update
     try {
+        const isUsernameChanged = newUserData.userName
+        if (isUsernameChanged) {
+            const isNewUsernameAvailable = await checkUsernamePresentInDB(newUserData.userName!)
+            if (!isNewUsernameAvailable) {
+                console.error("ERROR: Cannot update the username as new username is already present")
+                return {
+                    status: 400,
+                    message: "Username already present"
+                }
+            }
+        }
         const updatedUser = await prisma.user.update({
             where: {
                 uid: uid
@@ -108,10 +119,16 @@ export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: 
                 ...newUserData
             }
         })
-        return updatedUser
+        return {
+            status: 200,
+            message: "User info updated successfully"
+        }
     } catch (error) {
         console.error("ERROR: Error in updating userinfo.", error)
-        return null
+        return {
+            status: 500,
+            message: "Error in updating userinfo"
+        }
     }
 }
 

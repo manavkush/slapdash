@@ -19,10 +19,9 @@ export async function POST(req: Request) {
       }, {status: 401})
     }
     const uid = session.user.id
-    const updatedUser: TypeUpdateUserRequest = await req.json();
+    const newUserData: TypeUpdateUserRequest = await req.json();
 
-    updateUserInfoInDB(updatedUser, uid)
+    const updatedUser = updateUserInfoInDB(newUserData, uid)
     
-    // TODO: Add dbUtil call for update
-    return NextResponse.json({ title: { title } }, { status: 201 });
+    return NextResponse.json(updatedUser, { status: 201 });
 }
