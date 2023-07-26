@@ -12,6 +12,11 @@ export const READ_WRITE_PERMISSION = "read-write";
 //     permission: string;
 //     lastSeenTimeStamp: Date;
 // }
+export type TypeUtilResponse = {
+    status: number;
+    message?: string,
+    data?:any
+}
 
 export interface FilteredUser {
     uid: string;
