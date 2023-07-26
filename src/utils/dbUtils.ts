@@ -7,6 +7,7 @@ import {
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserRequest,
     TypeUpdateUserRequest,
+    TypeUtilResponse,
 } from "./types";
 
 const prisma = new PrismaClient();
@@ -95,10 +96,8 @@ export const insertUserInDB = async (
 };
 
 
-export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: string) => {
-    // TODO: check if the user needs to update the username, if yes, check if new username available;
+export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: string):Promise<TypeUtilResponse> => {
     
-    // TODO: Make prisma call to update
     try {
         const isUsernameChanged = newUserData.userName
         if (isUsernameChanged) {
@@ -111,6 +110,7 @@ export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: 
                 }
             }
         }
+
         const updatedUser = await prisma.user.update({
             where: {
                 uid: uid
@@ -121,7 +121,10 @@ export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: 
         })
         return {
             status: 200,
-            message: "User info updated successfully"
+            message: "User info updated successfully",
+            data: {
+                user: updatedUser
+            }
         }
     } catch (error) {
         console.error("ERROR: Error in updating userinfo.", error)
