@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { title } from "process";
 
-export async function POST(req: Request) {
+async function updateUser (req: Request) {
     const session: TypeSession|null = await getServerSession(authOptions)
     
     if(!session) {
@@ -24,3 +24,5 @@ export async function POST(req: Request) {
     
     return NextResponse.json(updateUserInfo, { status: 201 });
 }
+
+export {updateUser as POST}
