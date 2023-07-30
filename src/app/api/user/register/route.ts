@@ -14,14 +14,14 @@ const register = async (req: Request) => {
     if (!usernamePresent) {
         let res: TypeInsertUserInDBResponse;
         res = await insertUserInDB(user);
-        return NextResponse.json(res);
+        return NextResponse.json(res, {status: 200});
     } else {
         return NextResponse.json({
             status: true,
             message: {
                 error: "Cannot create new user. Username already present.",
             },
-        });
+        }, {status: 400});
     }
 };
 
