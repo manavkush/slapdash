@@ -33,6 +33,7 @@ model Message {
   text              String
   channelId         String
   channel           Channel  @relation(fields: [channelId], references: [id])
+  fromUser          String
   creationTimestamp DateTime @default(now())
 
   @@index([channelId])
