@@ -3,9 +3,11 @@ import { hash, compare } from "bcrypt";
 import { profile } from "console";
 import {
     TypeAddChannelResponse,
+    TypeAddUserChannelConfigToDB,
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserRequest,
     TypeUpdateUserRequest,
+    TypeUtilResponse,
 } from "./types";
 
 const prisma = new PrismaClient();
@@ -83,6 +85,7 @@ export const insertUserInDB = async (
             message: "Inserted user into DB.",
         };
     } catch (error: any) {
+        console.error("ERROR: Error in inserting user to DB.", error)
         res = {
             status: false,
             message: "Insert Failed. " + error.message,
@@ -93,10 +96,43 @@ export const insertUserInDB = async (
 };
 
 
-export const updateUserInfoInDB =async (updatedUser:TypeUpdateUserRequest, uid: string) => {
-    // TODO: check if the user needs to update the username, if yes, check if new username available
+export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: string):Promise<TypeUtilResponse> => {
     
-    // TODO: Make prisma call to update
+    try {
+        const isUsernameChanged = newUserData.userName
+        if (isUsernameChanged) {
+            const isNewUsernameAvailable = await checkUsernamePresentInDB(newUserData.userName!)
+            if (!isNewUsernameAvailable) {
+                console.error("ERROR: Cannot update the username as new username is already present")
+                return {
+                    status: 400,
+                    message: "Username already present"
+                }
+            }
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: {
+                uid: uid
+            },
+            data: {
+                ...newUserData
+            }
+        })
+        return {
+            status: 200,
+            message: "User info updated successfully",
+            data: {
+                user: updatedUser
+            }
+        }
+    } catch (error) {
+        console.error("ERROR: Error in updating userinfo.", error)
+        return {
+            status: 500,
+            message: "Error in updating userinfo"
+        }
+    }
 }
 
 
@@ -125,11 +161,6 @@ export const createNewChannelInDB = async (
     return res;
 };
 
-interface TypeAddUserChannelConfigToDB {
-    uid: string;
-    channelId: string;
-    permission: string;
-}
 
 interface TypeAddUserChannelConfigToDBResponse {
     status: boolean;
