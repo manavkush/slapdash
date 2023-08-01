@@ -7,15 +7,15 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useSession } from 'next-auth/react';
 import { TypeSession } from '../utils/types';
 import { authOptions } from '../lib/auth';
+import ChatSidebar from '../components/ChatSidebar/ChatSidebar';
 // import Navbar from '../components/Navbar/Navbar';
 
 export default function Home() {
-  const session = useSession();
+  const {data: session, status} = useSession();
   
-
-  return session.data !== undefined ? (
+  return status == "authenticated" ? (
     <div style={{color:"white"}} className={styles.home}>
-      Dashboard SignedIn
+      <ChatSidebar />
     </div>
   ) : (
     <div style={{color:"white"}} className={styles.home}>
