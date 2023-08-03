@@ -3,7 +3,7 @@ import { authOptions } from "@/src/lib/auth";
 import { NextApiRequest, NextApiResponse } from "next";
 import { decode, getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from "next/server";
-import { TypeAddChannelUserRequest, TypeSession, ADMIN_PERMISSION } from "@/src/utils/types";
+import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/src/utils/types";
 import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
 const addChannel = async (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ const addChannel = async (req: Request, res: Response) => {
             }
         }, {status: 401})
     }
-    
+
     const channelSettings:TypeAddChannelUserRequest = await req.json()
     const {channelName, users} = channelSettings
 
@@ -34,7 +34,7 @@ const addChannel = async (req: Request, res: Response) => {
             */
 
             const uid = session.user.id
-            addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: ADMIN_PERMISSION})
+            addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: channelPermissions.ADMIN_PERMISSION})
             
             users?.forEach(({permission, uid}) => {
                 addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: permission})
