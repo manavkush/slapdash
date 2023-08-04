@@ -4,8 +4,7 @@ import ChannelBar from "./ChannelBar/ChannelBar"
 
 export default function ChatSidebar() {
   return (
-    <div>
-        <ServerBar />
+    <div className="bg-blue-500 w-1/4 h-screen max-w-[15rem]">
         <ChannelBar />
     </div>
   );
