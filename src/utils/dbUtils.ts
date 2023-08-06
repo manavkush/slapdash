@@ -1,8 +1,9 @@
-import { Channel, PrismaClient, User } from "@prisma/client";
+import { Channel, Message, PrismaClient, User } from "@prisma/client";
 import { hash, compare } from "bcrypt";
 import { profile } from "console";
 import {
     TypeAddChannelResponse,
+    TypeAddMessageToDb,
     TypeAddUserChannelConfigToDB,
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserRequest,
@@ -201,3 +202,32 @@ export const addUserChannelConfigToDB = async ({
     }
     return res;
 };
+
+
+interface TypeAddMessageToDbResponse{
+    status: boolean;
+    message: string;
+}
+
+export const addMessageToDb = async (message: TypeAddMessageToDb, uid: string): Promise<TypeAddMessageToDbResponse> => {
+    let res: TypeAddMessageToDbResponse;
+    try{
+        const addMessage = await prisma.message.create({
+            data:{
+                text: message.text,
+                channelId: message.channelId,
+                fromUserId: uid
+            }
+        })
+        res = {
+            status: true,
+            message: "Message inserted to DB",
+        };
+    } catch (error: any){
+        res = {
+            status: false,
+            message: error.message,
+        };
+    }
+    return res;
+}

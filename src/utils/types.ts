@@ -94,3 +94,8 @@ export type TypeSession = DefaultSession & {
         id: string;
     };
 };
+
+export interface TypeAddMessageToDb{
+    text: string;
+    channelId: string;
+}
