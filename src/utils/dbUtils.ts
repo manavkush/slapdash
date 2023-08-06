@@ -5,6 +5,7 @@ import {
     TypeAddChannelResponse,
     TypeAddMessageToDb,
     TypeAddUserChannelConfigToDB,
+    TypeDBUtilResponse,
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserRequest,
     TypeUpdateUserRequest,
@@ -14,6 +15,7 @@ import {
 const prisma = new PrismaClient();
 
 // TODO: Add a return type for the function
+// TODO: Add try catch
 export async function authenticateUser(username: string, password: string) {
     const user = await prisma.user.findFirst({
         where: {
@@ -39,37 +41,49 @@ export async function authenticateUser(username: string, password: string) {
     return null;
 }
 
+// TODO: Make this return object instead of boolean
 export const checkUsernamePresentInDB = async (
     username: string
 ): Promise<boolean> => {
-    const user = await prisma.user.findFirst({
-        where: {
-            userName: username,
-        },
-    });
-
-    return !!user;
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                userName: username,
+            },
+        });
+    
+        return !!user;
+    } catch(error) {
+        console.error("Unable to check username present in DB. Error:", error);
+    }
+    return false;
 };
 
 
 export const getUserInfoFromDB = async (username: string):Promise<User|null> => {
-    const user = await prisma.user.findFirst({
-        where: {
-            userName: username,
-        },
-    });
-    if (user === null) {
-        return null;
-    } else {
-        return user;
+    let res = null
+    try {
+        const user = await prisma.user.findFirst({
+            where: {
+                userName: username,
+            },
+        });
+        if (user === null) {
+            return null;
+        } else {
+            return user;
+        }
+    } catch (error: any) {
+        console.error("Unable to get user info from DB. error:", error)
     }
+    return res;
 };
 
 
 export const insertUserInDB = async (
     user: TypeRegisterOrUpdateUserRequest
-): Promise<TypeInsertUserInDBResponse> => {
-    let res: TypeInsertUserInDBResponse;
+): Promise<TypeDBUtilResponse> => {
+    let res: TypeDBUtilResponse;
     try {
         const password = await hash(user.password, 12);
         await prisma.user.create({
@@ -106,7 +120,7 @@ export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: 
             if (!isNewUsernameAvailable) {
                 console.error("ERROR: Cannot update the username as new username is already present")
                 return {
-                    status: 400,
+                    status: 401,
                     message: "Username already present"
                 }
             }
@@ -130,7 +144,7 @@ export const updateUserInfoInDB =async (newUserData:TypeUpdateUserRequest, uid: 
     } catch (error) {
         console.error("ERROR: Error in updating userinfo.", error)
         return {
-            status: 500,
+            status: 501,
             message: "Error in updating userinfo"
         }
     }
@@ -163,16 +177,12 @@ export const createNewChannelInDB = async (
 };
 
 
-interface TypeAddUserChannelConfigToDBResponse {
-    status: boolean;
-    message: string;
-}
 export const addUserChannelConfigToDB = async ({
     uid,
     channelId,
     permission,
-}: TypeAddUserChannelConfigToDB): Promise<TypeAddUserChannelConfigToDBResponse> => {
-    let res: TypeAddUserChannelConfigToDBResponse;
+}: TypeAddUserChannelConfigToDB): Promise<TypeDBUtilResponse> => {
+    let res: TypeDBUtilResponse;
     try {
         const channelUserConfig = await prisma.channelUserConfig.upsert({
             create: {
@@ -204,13 +214,8 @@ export const addUserChannelConfigToDB = async ({
 };
 
 
-interface TypeAddMessageToDbResponse{
-    status: boolean;
-    message: string;
-}
-
-export const addMessageToDb = async (message: TypeAddMessageToDb, uid: string): Promise<TypeAddMessageToDbResponse> => {
-    let res: TypeAddMessageToDbResponse;
+export const addMessageToDb = async (message: TypeAddMessageToDb, uid: string): Promise<TypeDBUtilResponse> => {
+    let res: TypeDBUtilResponse;
     try{
         const addMessage = await prisma.message.create({
             data:{
