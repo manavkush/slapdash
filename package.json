@@ -24,6 +24,7 @@
     "bootstrap": "4.1",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.7",
+    "neovim": "^4.10.1",
     "next": "13.4.7",
     "next-auth": "^4.22.1",
     "pusher": "^5.1.3",
