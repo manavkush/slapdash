@@ -1,10 +1,10 @@
 import { DefaultSession } from "next-auth";
 import { User, ChannelUserConfig } from "@prisma/client";
 
-export enum channelPermissions {
-    ADMIN_PERMISSION = "admin",
-    READ_ONLY_PERMISSION = "read-only",
-    READ_WRITE_PERMISSION = "read-write"
+export type TypeDBUtilResponse = {
+    status: boolean,
+    message?: string,
+    data?: any
 }
 
 export type TypeUtilResponse = {
@@ -12,6 +12,13 @@ export type TypeUtilResponse = {
     message?: string,
     data?:any
 }
+
+export enum channelPermissions {
+    ADMIN_PERMISSION = "admin",
+    READ_ONLY_PERMISSION = "read-only",
+    READ_WRITE_PERMISSION = "read-write"
+}
+
 
 export interface FilteredUser {
     uid: string;
@@ -82,15 +89,13 @@ export interface TypeAddChannelUserResponse {
     channelName?: string;
 }
 
-export interface TypeAddChannelResponse {
-    status: boolean;
-    message?: string;
-    channelId?: string;
-    channelName?: string;
-}
-
 export type TypeSession = DefaultSession & {
     user: {
         id: string;
     };
 };
+
+export interface TypeAddMessageToDb{
+    text: string;
+    channelId: string;
+}

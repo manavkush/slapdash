@@ -3,6 +3,7 @@ import {
     TypeRegisterOrUpdateUserRequest,
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserResponse,
+    TypeDBUtilResponse,
 } from "@/src/utils/types";
 import { NextResponse } from "next/server";
 
@@ -12,7 +13,7 @@ const register = async (req: Request) => {
     const usernamePresent = await checkUsernamePresentInDB(user.username);
 
     if (!usernamePresent) {
-        let res: TypeInsertUserInDBResponse;
+        let res: TypeDBUtilResponse;
         res = await insertUserInDB(user);
         return NextResponse.json(res, {status: 200});
     } else {
