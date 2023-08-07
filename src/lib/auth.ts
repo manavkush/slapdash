@@ -22,20 +22,11 @@ export const authOptions: NextAuthOptions = {
                 password: { type: "password"}
             }, 
             async authorize(credentials) {
-                let userFromDb = await authenticateUser(credentials?.username!, credentials?.password!)
                 if (!credentials?.username || !credentials.password) {
                     throw new Error("Invalid credentials")
                 }
+                let userFromDb = await authenticateUser(credentials?.username!, credentials?.password!)
                 return userFromDb;
-                // let returnUser = userFromDb ? {
-                //     id : userFromDb.id,
-                //     username: userFromDb.username,
-                //     bio: userFromDb.bio,
-                //     name: userFromDb.name,
-                //     profilePic: userFromDb.profilePic
-                // } : null
-
-                // return returnUser
             },
         })
     ],

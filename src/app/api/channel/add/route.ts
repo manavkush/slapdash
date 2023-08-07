@@ -14,7 +14,6 @@ const addChannel = async (req: Request, res: Response) => {
     if(!session) {
         // Not signedIn
         return NextResponse.json({
-            status: 401,
             message: {
                 error: "Authorization Error: Client not authorized to access api route."
             }
@@ -25,24 +24,31 @@ const addChannel = async (req: Request, res: Response) => {
     const {channelName, users} = channelSettings
 
     try {
-        const {status, channelId, message} = await createNewChannelInDB(channelName)
+        const {status, data, message} = await createNewChannelInDB(channelName)
+        const channelId = data.channelId
         
         if (status && channelId) {
-            /* 
-                * Channel creation done
-                * Now adding the users to the channel left
-            */
-
             const uid = session.user.id
             addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: channelPermissions.ADMIN_PERMISSION})
             
             users?.forEach(({permission, uid}) => {
                 addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: permission})
             });
+            
+            return NextResponse.json({
+                message: "Created New Channel In DB"
+            }, {status: 200})
         }
-        
+
+        return NextResponse.json({
+            message: message
+        }, {status: 400})
+
     } catch (error: any) {
-        console.log("ERROR:", error)
+        console.error("Unable to create new channel in DB. Error:", error)
+        return NextResponse.json({
+            message: "Error in creating new channel"
+        }, {status: 500})
     }
 }
 

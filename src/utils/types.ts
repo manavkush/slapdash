@@ -89,13 +89,6 @@ export interface TypeAddChannelUserResponse {
     channelName?: string;
 }
 
-export interface TypeAddChannelResponse {
-    status: boolean;
-    message?: string;
-    channelId?: string;
-    channelName?: string;
-}
-
 export type TypeSession = DefaultSession & {
     user: {
         id: string;
