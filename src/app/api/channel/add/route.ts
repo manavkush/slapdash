@@ -1,8 +1,6 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/lib/auth";
-import { NextApiRequest, NextApiResponse } from "next";
-import { decode, getToken } from 'next-auth/jwt';
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/src/utils/types";
 import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
