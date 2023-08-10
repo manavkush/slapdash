@@ -4,7 +4,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.css";
 import Navbar from "../components/Navbar/Navbar";
 import { NextAuthProvider } from "./providers";
-import { GlobalContextProvider } from "../context/globalContext";
+import { GlobalContextProvider } from "../context/GlobalContext";
 
 const inter = Inter({ subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
