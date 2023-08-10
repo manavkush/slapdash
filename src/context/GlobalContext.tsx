@@ -11,6 +11,7 @@ interface GlobalContextProps {
     setChannel: (channel: any) => void
 }
 
+"use-client"
 export const GlobalContext = createContext<GlobalContextProps>({
     user: null,
     channel: null,
