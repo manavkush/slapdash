@@ -1,0 +1,1 @@
+export const MESSAGE_EVENT = "MESSAGE_EVENT"

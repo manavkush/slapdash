@@ -1,6 +1,7 @@
 import { authOptions } from '@/src/lib/auth';
+import { pusherSendMessage } from '@/src/lib/pusher';
 import { addMessageToDb } from '@/src/utils/dbUtils';
-import { TypeSession } from '@/src/utils/types';
+import { TypeAddMessageToDb, TypeSession } from '@/src/utils/types';
 import { getServerSession } from 'next-auth/next';
 import { NextResponse, NextRequest } from 'next/server'
 
@@ -11,22 +12,27 @@ const addMessage = async (req: Request, res: Response) => {
     if(!session) {
         // Not signedIn
         return NextResponse.json({
-            status: 401,
             message: {
                 error: "Authorization Error: Client not authorized to access api route."
             }
         }, {status: 401})
     }
     
-    try{
+    try {
         const uid = session.user.id;
-        const message = await req.json()
-        const response = await addMessageToDb(message,uid)
-        //TODO: add publish to channel
-        //TODO: update channel table to add message to channel
-    }catch(error: any){
+        const messageObject:TypeAddMessageToDb = await req.json()
+        const response = await addMessageToDb(messageObject,uid)
+
+        const {status, data, message} = response
+        if (!status) {
+            throw Error(response.message)
+        }
+        // TODO: Needs testing
+        pusherSendMessage(messageObject.channelId, response.data.message)
+
+    } catch(error: any) {
         console.log("Error:", error);
     }
  }
 
- export {addMessage as POST}
+ export { addMessage as POST }

@@ -258,6 +258,9 @@ export const addMessageToDb = async (message: TypeAddMessageToDb, uid: string): 
         res = {
             status: true,
             message: "Message inserted to DB",
+            data: {
+                message: addMessage
+            }
         };
     } catch (error: any){
         res = {
