@@ -1,3 +1,4 @@
+"use client"
 import { Channel, User } from '@prisma/client';
 import React, { useState } from 'react';
 import { createContext } from 'react';
@@ -11,7 +12,6 @@ interface GlobalContextProps {
     setChannel: (channel: any) => void
 }
 
-"use-client"
 export const GlobalContext = createContext<GlobalContextProps>({
     user: null,
     channel: null,

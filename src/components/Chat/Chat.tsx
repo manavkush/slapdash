@@ -12,9 +12,10 @@ interface ChatProps {
 }
 
 const Chat = (props: ChatProps) => {
+  //TODO: initialize the messages of the channel
   const [messages, setMessages] = useState<Message[]>([])
-
   useEffect(() => {
+    
     if(props.channel) {
       const channel = pusherClient.subscribe(props.channel.id)
 
@@ -25,8 +26,8 @@ const Chat = (props: ChatProps) => {
     }
 
     return () => {
-      if(props.channel)
-        pusherClient.unsubscribe(props.channel.id)
+      // if(props.channel)
+      //   pusherClient.unsubscribe(props.channel.id)
     }
   }, [messages, props.channel, props.channel?.id])
   
@@ -45,4 +46,4 @@ const Chat = (props: ChatProps) => {
 }
 
 
-export default Chat
+export default Chat;
