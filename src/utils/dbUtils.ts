@@ -9,7 +9,7 @@ import {
     TypeRegisterOrUpdateUserRequest,
     TypeUpdateUserRequest,
     TypeUtilResponse,
-} from "./types";
+} from "../types/types";
 
 const prisma = new PrismaClient();
 

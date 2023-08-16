@@ -22,6 +22,7 @@
     "@types/react-dom": "18.2.6",
     "bcrypt": "^5.1.0",
     "bootstrap": "4.1",
+    "encoding": "^0.1.13",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.7",
     "neovim": "^4.10.1",

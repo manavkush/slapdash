@@ -4,7 +4,7 @@ import {
     TypeInsertUserInDBResponse,
     TypeRegisterOrUpdateUserResponse,
     TypeDBUtilResponse,
-} from "@/src/utils/types";
+} from "@/src/types/types";
 import { NextResponse } from "next/server";
 
 const register = async (req: Request) => {

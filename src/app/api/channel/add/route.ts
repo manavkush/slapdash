@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/lib/auth";
 import { NextResponse } from "next/server";
-import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/src/utils/types";
+import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/src/types/types";
 import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
 const addChannel = async (req: Request, res: Response) => {

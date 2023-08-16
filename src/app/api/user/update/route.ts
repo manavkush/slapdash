@@ -1,6 +1,6 @@
 import { authOptions } from "@/src/lib/auth";
 import { updateUserInfoInDB } from "@/src/utils/dbUtils";
-import { TypeSession, TypeUpdateUserRequest, TypeUtilResponse } from "@/src/utils/types";
+import { TypeSession, TypeUpdateUserRequest, TypeUtilResponse } from "@/src/types/types";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { title } from "process";

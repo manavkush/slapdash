@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {TypeRegisterOrUpdateUserRequest, TypeRegisterOrUpdateUserResponse} from "@/src/utils/types"
+import {TypeRegisterOrUpdateUserRequest, TypeRegisterOrUpdateUserResponse} from "@/src/types/types"
 import { redirect } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

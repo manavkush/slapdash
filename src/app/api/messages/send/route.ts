@@ -1,7 +1,7 @@
 import { authOptions } from '@/src/lib/auth';
 import { pusherSendMessage } from '@/src/lib/pusher';
 import { addMessageToDb } from '@/src/utils/dbUtils';
-import { TypeAddMessageToDb, TypeSession } from '@/src/utils/types';
+import { TypeAddMessageToDb, TypeSession } from '@/src/types/types';
 import { getServerSession } from 'next-auth/next';
 import { NextResponse, NextRequest } from 'next/server'
 
