@@ -21,7 +21,10 @@ export const GlobalContext = createContext<GlobalContextProps>({
 
 export const GlobalContextProvider = (props: {children: React.ReactNode}) => {
     const [user, setUser] = useState(null)
-    const [channel, setChannel] = useState(null)
+    const [channel, setChannel] = useState({
+        id: "fc340e14-372b-11ee-be56-0242ac120002",
+        channelName: "test channel"
+    })
 
     return <GlobalContext.Provider value={{
         user: user,
