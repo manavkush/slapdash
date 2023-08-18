@@ -6,6 +6,7 @@ import { Message, Channel, User } from '@prisma/client';
 import { pusherClient, pusherSendMessage } from '@/src/lib/pusher';
 import { MESSAGE_EVENT } from '@/src/lib/stringConstants';
 import { channel } from 'diagnostics_channel';
+import { Chatbox } from './Chatbox/Chatbox';
 
 interface ChatProps {
   channel: Channel|null
@@ -14,29 +15,27 @@ interface ChatProps {
 
 const Chat = (props: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
-  const [messageToSend, setMessageToSend] = useState("")
+  
+  const sendMessageHandler = async (messageText: string) => {
+    // const sendMessageResponse = await pusherSendMessage(props.channel?.id!, {
+    //   id: "random_id",
+    //   text: messageText,
+    //   channelId: props.channel?.id!,
+    //   fromUserId: props.user?.uid!,
+    //   creationTimestamp: new Date()
+    // })
+    // console.log(sendMessageResponse)
 
-  const handleSubmit = async (e:Event) => {
-    e.preventDefault();
-    const sendMessageResponse = await pusherSendMessage(props.channel?.id!, {
-      id: "random_id",
-      text: messageToSend,
-      channelId: props.channel?.id!,
-      fromUserId: props.user?.uid!,
-      creationTimestamp: new Date()
+    const dbResponse = fetch("/api/message/send", {
+      method: "POST",
+      body: JSON.stringify({
+        text: messageText,
+        channelId: props.channel?.id
+      },
+
+      )
     })
-    console.log(sendMessageResponse)
-    // const response = await fetch("/api/pusher", {
-    //   method: "POST",
-    //   body: JSON.stringify({message: messageToSend, uid: props?.user?.uid}),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // const body = await response.json()
-    // console.log(body)
-    setMessageToSend("")
-  };
+  }
 
   useEffect(() => {
     if(props.channel) {
@@ -65,10 +64,7 @@ const Chat = (props: ChatProps) => {
           </p>
         )
       })}
-      <form>
-        <input type="text" value={messageToSend} onChange={(e) => {setMessageToSend(e.target.value)}} />
-        <button>Send</button>
-      </form>
+      <Chatbox />
     </div>
   )
 }
