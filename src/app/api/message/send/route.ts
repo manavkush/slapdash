@@ -5,9 +5,9 @@ import { TypeAddMessageToDb, TypeSession } from '@/src/types/types';
 import { getServerSession } from 'next-auth/next';
 import { NextResponse, NextRequest } from 'next/server'
 
-const addMessage = async (req: Request, res: Response) => {
+const addMessage = async (req: Request) => {
+    console.log("Add message request recieved")
     const session: TypeSession|null = await getServerSession(authOptions)
-    console.log("Session: ", session)
 
     if(!session) {
         // Not signedIn
@@ -21,14 +21,20 @@ const addMessage = async (req: Request, res: Response) => {
     try {
         const uid = session.user.id;
         const messageObject:TypeAddMessageToDb = await req.json()
+        console.log("INFO: Message Object:", messageObject)
+
         const response = await addMessageToDb(messageObject,uid)
+
+        console.log("INFO: addMessageToDb Response: ", response.data?.message)
 
         const {status, data, message} = response
         if (!status) {
             throw Error(response.message)
         }
         // TODO: Needs testing
-        pusherSendMessage(messageObject.channelId, response.data.message)
+        // if (response.data?.message)
+        const pusherSendMessageResponse = await pusherSendMessage(messageObject.channelId, response.data?.message)
+        console.log("pusherSendMessageResponse: ", pusherSendMessageResponse)
 
     } catch(error: any) {
         console.log("Error:", error);
