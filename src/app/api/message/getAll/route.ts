@@ -21,25 +21,11 @@ const addMessage = async (req: Request) => {
     
     try {
         const uid = session.user.id;
-        const messageObject:TypeAddMessageToDb = await req.json()
-        console.log("INFO: Message Object:", messageObject)
-
-        const response = await addMessageToDb(messageObject,uid)
-
-        console.log("INFO: addMessageToDb Response: ", response.data?.message)
-
-        const {status, data, message} = response
-        if (!status) {
-            throw Error(response.message)
-        }
-        // TODO: Needs testing
-        // if (response.data?.message)
-        const pusherSendMessageResponse = await pusherSendMessage(messageObject.channelId, response.data?.message)
-        console.log("pusherSendMessageResponse: ", pusherSendMessageResponse)
+        
 
     } catch(error: any) {
         console.log("Error:", error);
     }
  }
 
- export { addMessage as POST }
+ export { addMessage as GET }

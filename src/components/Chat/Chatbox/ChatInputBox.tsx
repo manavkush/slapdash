@@ -1,14 +1,14 @@
 import { useState } from "react"
 
-export interface ChatboxProps {
+export interface ChatInputBoxProps {
   messageSendHandle: (message:string) => {}
 }
 
-export const Chatbox = (props: ChatboxProps) => {
+export const ChatInputBox = (props: ChatInputBoxProps) => {
   const [messageToSend, setMessageToSend] = useState("")
 
-  const handleSubmit = (event: any) => {
-    props.messageSendHandle(event.target.value)
+  const handleSubmit = () => {
+    props.messageSendHandle(messageToSend)
   }
 
   return (

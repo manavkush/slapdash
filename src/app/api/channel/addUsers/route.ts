@@ -5,9 +5,9 @@ import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/sr
 import { setUserRoleInDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
 const addChannel = async (req: Request, res: Response) => {
-    console.info("AddChannel Request received.")
 
     const session: TypeSession|null = await getServerSession(authOptions)
+    console.log("Session: ", session)
 
     if(!session) {
         // Not signedIn
@@ -17,6 +17,12 @@ const addChannel = async (req: Request, res: Response) => {
             }
         }, {status: 401})
     }
+
+    // TODO: Checking if the user is an admin ( to check if he can add someone)
+    const {channelId} = await req.json();
+    isUserAdmin(session.user.id, channelId)
+
+
 
     const channelSettings:TypeAddChannelUserRequest = await req.json()
     const {channelName, users} = channelSettings
