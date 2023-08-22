@@ -10,6 +10,7 @@ import {
     TypeUpdateUserRequest,
     TypeUtilResponse,
 } from "../types/types";
+import { string } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -263,4 +264,21 @@ export const addMessageToDb = async (message: TypeAddMessageToDb, uid: string): 
         };
     }
     return res;
+}
+
+export const getMessageForChannel = async(channelId: string) => {
+    try{
+        const channelMessages = await prisma.message.findMany({
+            where: {
+                channelId: channelId
+            },
+            orderBy: {
+                creationTimestamp: "asc"
+            }
+        })
+        return channelMessages;
+    } catch(error: any){
+        console.error("Error: Cannot get messages from DB")
+    }
+    return []
 }

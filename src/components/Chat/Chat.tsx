@@ -18,13 +18,13 @@ interface ChatProps {
 
 const Chat = (props: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
-  const { isLoading, error, data } = useQuery({
-    queryKey: ['chatData'],
-    queryFn: () =>
-      fetch('https://api.github.com/repos/TanStack/query').then(
-        (res) => res.json(),
-      ),
-  })
+  // const { isLoading, error, data } = useQuery({
+  //   queryKey: ['chatData'],
+  //   queryFn: () =>
+  //     fetch('https://api.github.com/repos/TanStack/query').then(
+  //       (res) => res.json(),
+  //     ),
+  // })
   
   const sendMessageHandler = async (messageText: string) => {
     console.log("Sending message using send Message handler")
