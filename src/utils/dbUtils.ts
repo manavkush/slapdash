@@ -192,8 +192,12 @@ export const getUserRoleFromDB = async (uid: string, channelId: string) => {
                 },
             }
         });
+        if (userConfig != null) {
+            return userConfig.permission;
+        }
+        return null;
     } catch (error) {
-        
+       console.error("Error in getUserRoleFromDB. ", error)
     }
 }
 

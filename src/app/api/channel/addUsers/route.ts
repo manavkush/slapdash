@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/lib/auth";
 import { NextResponse } from "next/server";
 import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/src/types/types";
-import { setUserRoleInDB, createNewChannelInDB } from "@/src/utils/dbUtils";
+import { setUserRoleInDB, createNewChannelInDB, getUserRoleFromDB } from "@/src/utils/dbUtils";
 
 const addChannel = async (req: Request, res: Response) => {
 
@@ -18,40 +18,38 @@ const addChannel = async (req: Request, res: Response) => {
         }, {status: 401})
     }
 
-    // TODO: Checking if the user is an admin ( to check if he can add someone)
-    const {channelId} = await req.json();
-    isUserAdmin(session.user.id, channelId)
-
-
-
-    const channelSettings:TypeAddChannelUserRequest = await req.json()
-    const {channelName, users} = channelSettings
+    const {channelId, users} = await req.json();
+    const userRole = await getUserRoleFromDB(session.user.id, channelId);
+    
+    // Check if user is admin (Only admins are allowed to add users)
+    if (userRole != channelPermissions.ADMIN_PERMISSION) {
+        return NextResponse.json({
+            message: {
+                error: "Authorization Error: Client not authorized to access api route."
+            }
+        }, {status: 401})
+    }
 
     try {
-        const {status, data, message} = await createNewChannelInDB(channelName)
-        const channelId = data.channelId
-        
-        if (status && channelId) {
-            const uid = session.user.id
-            setUserRoleInDB({channelId: channelId!, uid: uid, permission: channelPermissions.ADMIN_PERMISSION})
-            
-            users?.forEach(({permission, uid}) => {
-                setUserRoleInDB({channelId: channelId!, uid: uid, permission: permission})
-            });
-            
-            return NextResponse.json({
-                message: "Created New Channel In DB"
-            }, {status: 200})
-        }
-
+        // set the role for the list of users
+        users.forEach(async (uidAndPermission: {uid: string, permission: channelPermissions})=> {
+            const {uid, permission} = uidAndPermission
+            const {status, data, message} = await setUserRoleInDB({channelId: channelId, uid: uid, permission: permission })
+            if (!status) {
+                return NextResponse.json({
+                    message: {
+                        error: "Unable to add user to channel."
+                    }
+                })
+            } 
+        });
         return NextResponse.json({
-            message: message
-        }, {status: 400})
-
+            message: "Added users to Channel in DB",
+        }, {status: 200})
     } catch (error: any) {
-        console.error("Unable to create new channel in DB. Error:", error)
+        console.error("Unable to add users to channel", error)
         return NextResponse.json({
-            message: "Error in creating new channel"
+            message: "Error in adding users to channel"
         }, {status: 500})
     }
 }
