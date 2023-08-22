@@ -1,13 +1,13 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/lib/auth";
 import { NextResponse } from "next/server";
-import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/src/utils/types";
-import { addUserChannelConfigToDB, createNewChannelInDB } from "@/src/utils/dbUtils";
+import { TypeAddChannelUserRequest, TypeSession, channelPermissions } from "@/src/types/types";
+import { setUserRoleInDB, createNewChannelInDB } from "@/src/utils/dbUtils";
 
 const addChannel = async (req: Request, res: Response) => {
+    console.info("AddChannel Request received.")
 
     const session: TypeSession|null = await getServerSession(authOptions)
-    console.log("Session: ", session)
 
     if(!session) {
         // Not signedIn
@@ -27,10 +27,10 @@ const addChannel = async (req: Request, res: Response) => {
         
         if (status && channelId) {
             const uid = session.user.id
-            addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: channelPermissions.ADMIN_PERMISSION})
+            setUserRoleInDB({channelId: channelId!, uid: uid, permission: channelPermissions.ADMIN_PERMISSION})
             
             users?.forEach(({permission, uid}) => {
-                addUserChannelConfigToDB({channelId: channelId!, uid: uid, permission: permission})
+                setUserRoleInDB({channelId: channelId!, uid: uid, permission: permission})
             });
             
             return NextResponse.json({

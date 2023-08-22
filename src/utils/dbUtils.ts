@@ -9,7 +9,7 @@ import {
     TypeRegisterOrUpdateUserRequest,
     TypeUpdateUserRequest,
     TypeUtilResponse,
-} from "./types";
+} from "../types/types";
 
 const prisma = new PrismaClient();
 
@@ -182,33 +182,27 @@ export const createNewChannelInDB = async (
 };
 
 
-// export const createNewChannelInDB2 = async (
-//     channelName: string
-// ): Promise<TypeAddChannelResponse> => {
-//     let res: TypeAddChannelResponse;
-//     try {
-//         const newChannel: Channel = await prisma.channel.create({
-//             data: {
-//                 channelName: channelName,
-//             },
-//         });
-//         res = {
-//             status: true,
-//             message: "Channel created successfully",
-//             channelId: newChannel.id,
-//             channelName: newChannel.channelName,
-//         };
-//     } catch (error: any) {
-//         res = {
-//             status: false,
-//             message: "Channel creation failed: " + error.message,
-//         };
-//     }
-//     return res;
-// };
+export const getUserRoleFromDB = async (uid: string, channelId: string) => {
+    try {
+        const userConfig = await prisma.channelUserConfig.findUnique({
+            where: {
+                channelId_uid: {
+                    channelId: channelId,
+                    uid: uid,
+                },
+            }
+        });
+        if (userConfig != null) {
+            return userConfig.permission;
+        }
+        return null;
+    } catch (error) {
+       console.error("Error in getUserRoleFromDB. ", error)
+    }
+}
 
 
-export const addUserChannelConfigToDB = async ({
+export const setUserRoleInDB = async ({
     uid,
     channelId,
     permission,
