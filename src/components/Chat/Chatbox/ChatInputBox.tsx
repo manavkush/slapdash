@@ -12,8 +12,8 @@ export const ChatInputBox = (props: ChatInputBoxProps) => {
   }
 
   return (
-    <form>
-        <input type="text" value={messageToSend} onChange={(e) => {setMessageToSend(e.target.value)}} />
+    <form className="px-1">
+        <input type="text" value={messageToSend} onChange={(e) => {setMessageToSend(e.target.value)}} className="text-black px-1"/>
         <button onClick={handleSubmit}>Send</button>
     </form>
   )
