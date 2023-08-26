@@ -35,9 +35,14 @@ const addMessage = async (req: Request) => {
         // if (response.data?.message)
         const pusherSendMessageResponse = await pusherSendMessage(messageObject.channelId, response.data?.message)
         // console.log("pusherSendMessageResponse: ", pusherSendMessageResponse)
-
+        return NextResponse.json({
+            message: "Sent Message Reequest Completed"
+        }, {status: 200})
     } catch(error: any) {
         console.log("Error:", error);
+        return NextResponse.json({
+            message: "Error in Send Message. Error: " + error
+        }, {status: 500})
     }
  }
 
