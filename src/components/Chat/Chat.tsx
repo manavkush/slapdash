@@ -31,7 +31,7 @@ const Chat = (props: ChatProps) => {
   useEffect(() => {
     if(messagesQuery.status == 'success') {
       console.log("MessageQuery.data", messagesQuery.data)
-      const newMessages = messagesQuery.data.channelMessages.map((message) => {
+      const newMessages = messagesQuery.data.channelMessages.map((message:Message) => {
         return {
           ...message,
           date: message.creationTimestamp.toString()
@@ -75,7 +75,7 @@ const Chat = (props: ChatProps) => {
     }
 
     const dbResponse = await fetch("/api/message/send", fetchOptions)
-    console.log("DB Response")
+    console.log("DB Response", dbResponse)
   }
 
   
