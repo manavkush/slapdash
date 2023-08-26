@@ -31,7 +31,7 @@ const Chat = (props: ChatProps) => {
   useEffect(() => {
     if(messagesQuery.status == 'success') {
       console.log("MessageQuery.data", messagesQuery.data)
-      const newMessages = messagesQuery.data.channelMessages.map((message) => {
+      const newMessages = messagesQuery.data.channelMessages.map((message: Message) => {
         return {
           ...message,
           date: message.creationTimestamp.toString()
