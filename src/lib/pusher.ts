@@ -11,7 +11,7 @@ export const pusherServer = new PusherServer({
     useTLS: true
 })
 
-PusherClient.logToConsole = true;
+// PusherClient.logToConsole = true;
 
 export const pusherClient = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
     cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!

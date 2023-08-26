@@ -12,13 +12,13 @@ const ChatHistory = (props: {messages: Message[]}) => {
     useEffect(() => {
         if(channel) {
           const pusherChannel = pusherClient.subscribe(channel.id)
-          console.log("pusherChannel:", pusherChannel)
+          // console.log("pusherChannel:", pusherChannel)
     
           pusherChannel.bind(MESSAGE_EVENT, (data:Message) => {
             setMessages([...messages, data])
           })
-          console.log("Pusher Channel bound", pusherChannel)
-          console.log("Messages: ", messages)
+          // console.log("Pusher Channel bound", pusherChannel)
+          // console.log("Messages: ", messages)
         }
     
         return () => {
