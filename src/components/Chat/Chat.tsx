@@ -27,6 +27,7 @@ const Chat = (props: ChatProps) => {
     queryFn: fetchMessages,
     enabled: !!props.channel
   })
+
  
   useEffect(() => {
     if(messagesQuery.status == 'success') {
@@ -37,7 +38,20 @@ const Chat = (props: ChatProps) => {
           date: message.creationTimestamp.toString()
         }
       })
-      setMessages([...messages, ...newMessages])
+      setMessages([...newMessages])
+      
+      pusherClient.unbind_all()
+      const pusherChannel = pusherClient.subscribe(props.channel!.id)
+      pusherChannel.bind(MESSAGE_EVENT, (data:{message: Message}) => {
+        console.log("Setting messages", data.message)
+        console.log("Old messages: ", messages)
+        setMessages([...newMessages, data.message])
+      }) 
+
+      return () => {
+        console.log("Unmounting the Chat component.")
+        pusherChannel.unbind_all()
+      }
     }
   }, [messagesQuery.status])
 
@@ -47,16 +61,9 @@ const Chat = (props: ChatProps) => {
   if (messagesQuery.status == "loading") {
     return <div>Loading</div>
   }
-
   
-  console.log("Messages: ", messages)
+
   if(props.channel) {
-    const pusherChannel = pusherClient.subscribe(props.channel.id)
-    
-    pusherChannel.bind(MESSAGE_EVENT, (data:Message) => {
-      console.log("Setting messages")
-      setMessages([...messages, data])
-    })
   }
 
 
@@ -74,13 +81,13 @@ const Chat = (props: ChatProps) => {
       })
     }
 
-    const dbResponse = await fetch("/api/message/send", fetchOptions)
-    console.log("DB Response")
-  }
+    const routeResponse = await fetch("/api/message/send", fetchOptions)
+    console.log("DB Response", routeResponse)
 
-  
+  }
+ 
   return (
-    <div className='Chat-wrapper'>
+    <div className='Chat-wrapper w-full'>
       <div>Chat</div>
       <ChatHistory messages={messages}/>
       <ChatInputBox messageSendHandle={sendMessageHandler} />
