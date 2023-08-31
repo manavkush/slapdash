@@ -27,23 +27,30 @@ const addMessage = async (req: Request) => {
 
         console.log("INFO: addMessageToDb Response: ", response.data?.message)
 
-        const {status, data, message} = response
+        const {status} = response
         if (!status) {
             throw Error(response.message)
         }
-        // TODO: Needs testing
-        // if (response.data?.message)
-        const pusherSendMessageResponse = await pusherSendMessage(messageObject.channelId, response.data?.message)
-        // console.log("pusherSendMessageResponse: ", pusherSendMessageResponse)
-        return NextResponse.json({
-            message: "Sent Message Reequest Completed"
-        }, {status: 200})
+        try {
+            const pusherSendMessageResponse = await pusherSendMessage(messageObject.channelId, response.data?.message)
+            if (pusherSendMessageResponse.ok) {
+                return NextResponse.json({
+                    message: "Sent Message Request Completed"
+                }, {status: 200}) 
+            }
+            return NextResponse.json({
+                message: "Failed in Sending Message Request.",
+            }, {status: pusherSendMessageResponse.status})
+        } catch (error: any) {
+            throw(error)
+        }
+
     } catch(error: any) {
         console.log("Error:", error);
         return NextResponse.json({
             message: "Error in Send Message. Error: " + error
         }, {status: 500})
     }
- }
+}
 
  export { addMessage as POST }

@@ -28,7 +28,7 @@ const ChatHistory = (props: {messages: Message[]}) => {
     }, [messages, channel, channel?.id])
 
   return (
-    <div>
+    <div className="px-1">
         <p>ChatHistory</p>
         {props.messages.map((message) => {
             return (
