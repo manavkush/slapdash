@@ -11,6 +11,7 @@ export const ChatInputBox = (props: ChatInputBoxProps) => {
     e.preventDefault()
     console.log("Handle Submit called")
     props.messageSendHandle(messageToSend)
+    setMessageToSend("")
   }
 
   return (
