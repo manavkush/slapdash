@@ -7,7 +7,6 @@ import { NextResponse, NextRequest } from 'next/server'
 import { Message } from '@prisma/client';
 
 const getAllMessages = async (req: Request) => {
-    console.info("Request recieved at /api/message/getAll")
     const session: TypeSession|null = await getServerSession(authOptions)
 
     if(!session) {
@@ -20,7 +19,6 @@ const getAllMessages = async (req: Request) => {
     }
     const { searchParams } = new URL(req.url)
     const channelId = searchParams.get("channelId")
-    console.log(channelId)
     
     // check if the user is allowed to access the channel
     

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo } from 'react'
+import React, { useEffect, useState, memo, useRef } from 'react'
 import { Message, Channel, User } from '@prisma/client';
 import { pusherClient} from '@/src/lib/pusher';
 import { MESSAGE_EVENT } from '@/src/lib/stringConstants';
@@ -14,6 +14,8 @@ interface ChatProps {
 
 const Chat = (props: ChatProps) => {
   const [messages, setMessages] = useState<Message[]>([])
+  // const messages = useRef<Message[]>([])
+  const [isInit, setIsInit] = useState(false)
   
   const fetchMessages = async () => {
     const response = await fetch("/api/message/getAll?" + new URLSearchParams({channelId: props.channel!.id}));
@@ -28,7 +30,7 @@ const Chat = (props: ChatProps) => {
     enabled: !!props.channel
   })
 
- 
+  // Set the messages initially after the react query execution
   useEffect(() => {
     if(messagesQuery.status == 'success') {
       console.log("MessageQuery.data", messagesQuery.data)
@@ -38,22 +40,33 @@ const Chat = (props: ChatProps) => {
           date: message.creationTimestamp.toString()
         }
       })
+      // messages.current = newMessages
       setMessages([...newMessages])
-      
-      pusherClient.unbind_all()
-      const pusherChannel = pusherClient.subscribe(props.channel!.id)
-      pusherChannel.bind(MESSAGE_EVENT, (data:{message: Message}) => {
-        console.log("Setting messages", data.message)
-        console.log("Old messages: ", messages)
-        setMessages([...newMessages, data.message])
-      }) 
-
-      return () => {
-        console.log("Unmounting the Chat component.")
-        pusherChannel.unbind_all()
-      }
+      setIsInit(true)
+     
     }
   }, [messagesQuery.status])
+
+
+  // For non initialization 
+  useEffect(() => {
+
+    if (!isInit) {
+      return;
+    }
+
+    const pusherChannel = pusherClient.subscribe(props.channel!.id)
+    pusherChannel.bind(MESSAGE_EVENT, (data: {message: Message}) => {
+      console.log(`Caught Message Event: ${JSON.stringify(data.message)}`)
+      setMessages((prevMessages) => [...prevMessages, data.message])
+    })
+
+    return () => {
+      console.log("Unsubscribing from pusher Channel")
+      pusherChannel.unbind(MESSAGE_EVENT)
+    }
+  }, [isInit])
+
 
   if (messagesQuery.status == "error") {
     return <pre>{JSON.stringify(messagesQuery.error)}</pre>
@@ -96,4 +109,4 @@ const Chat = (props: ChatProps) => {
 }
 
 
-export default memo(Chat)
+export default Chat

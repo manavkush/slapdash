@@ -1,12 +1,13 @@
 import { authOptions } from '@/src/lib/auth';
 import { pusherSendMessage } from '@/src/lib/pusher';
 import { addMessageToDb } from '@/src/utils/dbUtils';
+import { Message } from '@prisma/client';
 import { TypeAddMessageToDb, TypeSession } from '@/src/types/types';
 import { getServerSession } from 'next-auth/next';
 import { NextResponse, NextRequest } from 'next/server'
+import { randomUUID } from 'crypto';
 
-const addMessage = async (req: Request) => {
-    console.log("Add message request recieved")
+const sendMessage = async (req: Request) => {
     const session: TypeSession|null = await getServerSession(authOptions)
 
     if(!session) {
@@ -21,8 +22,17 @@ const addMessage = async (req: Request) => {
     try {
         const uid = session.user.id;
         const messageObject:TypeAddMessageToDb = await req.json()
-        console.log("INFO: Message Object:", messageObject)
 
+        const pusherMessage:Message = {
+            id: randomUUID(),
+            channelId: messageObject.channelId,
+            text: messageObject.text,
+            fromUserId: uid,
+            creationTimestamp: new Date()
+        }
+
+        const pusherSendMessageResponse = await pusherSendMessage(messageObject.channelId, pusherMessage)
+        console.log("INFO: PUSHER SEND MESSAGE RESPONSE RECEIVED.")
         const response = await addMessageToDb(messageObject,uid)
 
         console.log("INFO: addMessageToDb Response: ", response.data?.message)
@@ -32,7 +42,6 @@ const addMessage = async (req: Request) => {
             throw Error(response.message)
         }
         try {
-            const pusherSendMessageResponse = await pusherSendMessage(messageObject.channelId, response.data?.message)
             if (pusherSendMessageResponse.ok) {
                 return NextResponse.json({
                     message: "Sent Message Request Completed"
@@ -53,4 +62,4 @@ const addMessage = async (req: Request) => {
     }
 }
 
- export { addMessage as POST }
+ export { sendMessage as POST }
