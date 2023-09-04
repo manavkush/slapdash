@@ -1,4 +1,4 @@
-import { Channel, Message, PrismaClient, User } from "@prisma/client";
+import { Channel, ChannelUserConfig, Message, PrismaClient, User } from "@prisma/client";
 import { hash, compare } from "bcrypt";
 import { profile } from "console";
 import {
@@ -281,4 +281,20 @@ export const getMessageForChannel = async(channelId: string) => {
         console.error("Error: Cannot get messages from DB")
     }
     return []
+}
+
+export const getChannelsForUser = async(userId: string) => {
+    try{
+        const channelUserConfig = await prisma.channelUserConfig.findMany({
+            where: {
+                uid: userId
+            },
+            include: {
+                channel: true
+            }
+        })
+        return channelUserConfig.map((channelConfig)=>(channelConfig.channel))
+    } catch(error: any){
+        console.error("Error: Cannot find channel for user")
+    }
 }
