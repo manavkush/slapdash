@@ -1,4 +1,4 @@
-import { NextAuthOptions, User } from "next-auth/index";
+import { NextAuthOptions } from "next-auth/index";
 import { authenticateUser } from "../utils/dbUtils";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google"
@@ -6,21 +6,21 @@ import GoogleProvider from "next-auth/providers/google"
 export const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: "/login",  
+        signIn: "/login",
     },
     session: {
         strategy: "jwt",
     },
-    providers : [
+    providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!
         }),
         CredentialsProvider({
             credentials: {
-                username: { type: "text"},
-                password: { type: "password"}
-            }, 
+                username: { type: "text" },
+                password: { type: "password" }
+            },
             async authorize(credentials) {
                 if (!credentials?.username || !credentials.password) {
                     throw new Error("Invalid credentials")
@@ -31,10 +31,10 @@ export const authOptions: NextAuthOptions = {
         })
     ],
     callbacks: {
-        jwt: ({token, user}) => {
+        jwt: ({ token, user }) => {
             // when we signin, user object is passed (for token creation)
             // we can use this user object, to pass fields that we want in the token
-            if(user) {
+            if (user) {
                 // triggered on signin
                 return {
                     ...token,
@@ -43,7 +43,7 @@ export const authOptions: NextAuthOptions = {
             }
             return token
         },
-        session: ({session, token}) => {
+        session: ({ session, token }) => {
             // This is called after the JWT callback
             // This will return a session which can be used by us in the application
             // via useSession/useServersideSession
