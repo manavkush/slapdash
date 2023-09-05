@@ -7,7 +7,7 @@ import { NextResponse } from "next/server"
 
 const getAllChannels = async () => {
     const session: TypeSession | null = await getServerSession(authOptions)
-
+    console.log("INFO: Request recieved at /api/channels/getAll")
     if (!session) {
         // Not signedIn
         return NextResponse.json({
@@ -30,7 +30,7 @@ const getAllChannels = async () => {
     } catch (error: any) {
         console.error("Error in getting all channels:", error);
     }
-    return null;
+    return [];
 }
 
 export { getAllChannels as GET }
