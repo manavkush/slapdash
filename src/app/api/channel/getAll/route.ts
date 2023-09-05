@@ -6,18 +6,18 @@ import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
 
 const getAllChannels = async () => {
-    const session: TypeSession|null = await getServerSession(authOptions)
-
-    if(!session) {
+    const session: TypeSession | null = await getServerSession(authOptions)
+    console.log("INFO: Request recieved at /api/channels/getAll")
+    if (!session) {
         // Not signedIn
         return NextResponse.json({
             message: {
                 error: "Authorization Error: Client not authenticated."
             }
-        }, {status: 401})
+        }, { status: 401 })
     }
 
-    try{
+    try {
         const uid = session.user.id;
         let userChannels: Channel[] | undefined = [];
         userChannels = await getChannelsForUser(uid);
@@ -26,11 +26,11 @@ const getAllChannels = async () => {
             data: {
                 userChannels
             }
-        }, {status: 200});
-    } catch(error: any) {
+        }, { status: 200 });
+    } catch (error: any) {
         console.error("Error in getting all channels:", error);
     }
-    return null;
+    return [];
 }
 
 export { getAllChannels as GET }

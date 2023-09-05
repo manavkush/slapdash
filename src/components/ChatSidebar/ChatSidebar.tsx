@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { Channel } from "@prisma/client";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -36,26 +37,38 @@ function TabPanel(props: TabPanelProps) {
     </div>
   );
 }
-export default function ChatSidebar() {
+export default function ChatSidebar({channels}: {channels:Channel[]}) {
 
   return (
     <div className="bg-cyan-500 w-1/4 h-screen max-w-[15rem]">
         <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-              </ListItemIcon>
-              <ListItemText primary="Inbox" />
-            </ListItemButton>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-              </ListItemIcon>
-              <ListItemText primary="Drafts" />
-            </ListItemButton>
-          </ListItem>
+          {channels.map((channel, idx)  => <ListItem  disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                  </ListItemIcon>
+                  <ListItemText primary={channel.channelName} />
+                </ListItemButton>
+            </ListItem>
+          )}
         </List>
     </div>
   );
 }
+
+
+
+
+          // <ListItem disablePadding>
+          //   <ListItemButton>
+          //     <ListItemIcon>
+          //     </ListItemIcon>
+          //     <ListItemText primary="Inbox" />
+          //   </ListItemButton>
+          // </ListItem>
+          // <ListItem disablePadding>
+          //   <ListItemButton>
+          //     <ListItemIcon>
+          //     </ListItemIcon>
+          //     <ListItemText primary="Drafts" />
+          //   </ListItemButton>
+          // </ListItem>
