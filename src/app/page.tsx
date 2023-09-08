@@ -25,13 +25,14 @@ export default function Home() {
 
   useEffect(() => {
     setUser(session?.user?.id)
-  }, [session?.user])
+  }, [session?.user, setUser])
 
   // This function fetches all the channels for a given user.
   const fetchChannels = async () => {
     const response = await fetch("/api/channel/getAll?" + new URLSearchParams({ uid: user?.uid! }));
     const channelsFromDB: TypeUtilResponse = await response.json();
-    return channelsFromDB.data
+    const channelsObj:{userChannels: Channel[]} = channelsFromDB.data
+    return channelsObj
   }
 
   const queryClient = useQueryClient();
@@ -47,13 +48,13 @@ export default function Home() {
       const userChannelsFromDb: Channel[] = channelQuery.data.userChannels
       setUserChannels(userChannelsFromDb)
     }
-  }, [channelQuery.status])
+  }, [channelQuery.status, channelQuery.data?.userChannels])
 
   // Early return for when the user is not signed in
   if (status != "authenticated") {
     return <div className={styles.home}>
       <p>Dashboard<br />
-        You're not Signed In<br />
+        You&apos;re not Signed In<br />
         <Link href="/login"> Click here </Link> login </p>
     </div>
   }
