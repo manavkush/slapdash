@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faFacebook } from '@fortawesome/free-brands-svg-icons';
 import styles from './page.module.css'
@@ -13,17 +13,21 @@ import Chat from '../components/Chat/Chat';
 import { createContext } from 'react';
 import {useGlobalContext} from "../context/index"
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import Link from 'next/link';
+import { Channel, Message } from '@prisma/client';
 
 // import Navbar from '../components/Navbar/Navbar';
 
 export default function Home() {
   const {data: session, status} = useSession();
   const {user, channel, setUser, setChannel} = useGlobalContext();
-
+  const [userChannels, setUserChannels] = useState<Channel[]>([])
+  
   useEffect(() => {
     setUser(session?.user?.id)
-  }, [])
+  }, [session?.user])
 
+  // This function fetches all the channels for a given user.
   const fetchChannels = async () => {
     const response = await fetch("/api/channel/getAll?" + new URLSearchParams({uid: user?.uid!}));
     const channelsFromDB:TypeUtilResponse = await response.json();
@@ -37,21 +41,32 @@ export default function Home() {
     enabled: !!user
   })
 
+  useEffect(() => {
+    if (channelQuery.status == "success") {
+      console.log("Setting Channels after query.")
+      const userChannelsFromDb:Channel[] = channelQuery.data.userChannels
+      setUserChannels(userChannelsFromDb)
+    }
+  }, [channelQuery.status])
+
+  // Early return for when the user is not signed in
+  if (status != "authenticated") {
+    return <div className={styles.home}>
+      <p>Dashboard<br/>
+      You're not Signed In<br/>
+      <Link href="/login"> Click here </Link> login </p>
+    </div>
+  }
+
   if (channelQuery.status == "error") {
-    return <pre>{JSON.stringify(channelQuery.error)}</pre>
+    return <pre className={styles.home}>{JSON.stringify(channelQuery.error)}</pre>
   }
   if (channelQuery.status == "loading") {
-    return <div>Loading</div>
+    return <div className={styles.home}></div>
   }
   
-  return status == "authenticated" ? (
-    <div style={{color:"white"}} className={styles.home}>
-      <ChatSidebar channels={channelQuery.data.userChannels}/>
+  return  <div className={styles.home}>
+      <ChatSidebar channels={userChannels}/>
       <Chat user={user} channel={channel} />
     </div>
-  ) : (
-    <div style={{color:"white"}} className={styles.home}>
-      Dashboard
-    </div>
-  )
 }
