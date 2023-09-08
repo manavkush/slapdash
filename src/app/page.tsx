@@ -11,7 +11,7 @@ import { authOptions } from '../lib/auth';
 import ChatSidebar from '../components/ChatSidebar/ChatSidebar';
 import Chat from '../components/Chat/Chat';
 import { createContext } from 'react';
-import {useGlobalContext} from "../context/index"
+import { useGlobalContext } from "../context/index"
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { Channel, Message } from '@prisma/client';
@@ -19,21 +19,21 @@ import { Channel, Message } from '@prisma/client';
 // import Navbar from '../components/Navbar/Navbar';
 
 export default function Home() {
-  const {data: session, status} = useSession();
-  const {user, channel, setUser, setChannel} = useGlobalContext();
+  const { data: session, status } = useSession();
+  const { user, channel, setUser, setChannel } = useGlobalContext();
   const [userChannels, setUserChannels] = useState<Channel[]>([])
-  
+
   useEffect(() => {
     setUser(session?.user?.id)
   }, [session?.user])
 
   // This function fetches all the channels for a given user.
   const fetchChannels = async () => {
-    const response = await fetch("/api/channel/getAll?" + new URLSearchParams({uid: user?.uid!}));
-    const channelsFromDB:TypeUtilResponse = await response.json();
+    const response = await fetch("/api/channel/getAll?" + new URLSearchParams({ uid: user?.uid! }));
+    const channelsFromDB: TypeUtilResponse = await response.json();
     return channelsFromDB.data
   }
-  
+
   const queryClient = useQueryClient();
   const channelQuery = useQuery({
     queryKey: ["channels"],
@@ -44,7 +44,7 @@ export default function Home() {
   useEffect(() => {
     if (channelQuery.status == "success") {
       console.log("Setting Channels after query.")
-      const userChannelsFromDb:Channel[] = channelQuery.data.userChannels
+      const userChannelsFromDb: Channel[] = channelQuery.data.userChannels
       setUserChannels(userChannelsFromDb)
     }
   }, [channelQuery.status])
@@ -52,9 +52,9 @@ export default function Home() {
   // Early return for when the user is not signed in
   if (status != "authenticated") {
     return <div className={styles.home}>
-      <p>Dashboard<br/>
-      You're not Signed In<br/>
-      <Link href="/login"> Click here </Link> login </p>
+      <p>Dashboard<br />
+        You're not Signed In<br />
+        <Link href="/login"> Click here </Link> login </p>
     </div>
   }
 
@@ -64,9 +64,9 @@ export default function Home() {
   if (channelQuery.status == "loading") {
     return <div className={styles.home}></div>
   }
-  
-  return  <div className={styles.home}>
-      <ChatSidebar channels={userChannels}/>
-      <Chat user={user} channel={channel} />
-    </div>
+
+  return <div className={styles.home}>
+    <ChatSidebar channels={userChannels} />
+    <Chat user={user} channel={channel} />
+  </div>
 }

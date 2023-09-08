@@ -37,20 +37,20 @@ function TabPanel(props: TabPanelProps) {
     </div>
   );
 }
-export default function ChatSidebar({channels}: {channels:Channel[]}) {
+export default function ChatSidebar({ channels }: { channels: Channel[] }) {
 
   return (
     <div className="bg-cyan-500 w-1/4 h-screen max-w-[15rem]">
-        <List>
-          {channels.map((channel, idx)  => <ListItem key={channel.id} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                  </ListItemIcon>
-                  <ListItemText primary={channel.channelName} />
-                </ListItemButton>
-            </ListItem>
-          )}
-        </List>
+      <List>
+        {channels.map((channel, idx) => <ListItem key={channel.id} disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+            </ListItemIcon>
+            <ListItemText primary={channel.channelName} />
+          </ListItemButton>
+        </ListItem>
+        )}
+      </List>
     </div>
   );
 }
