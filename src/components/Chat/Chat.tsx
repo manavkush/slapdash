@@ -64,8 +64,9 @@ const Chat = (props: ChatProps) => {
     return () => {
       console.log("Unsubscribing from pusher Channel")
       pusherChannel.unbind(MESSAGE_EVENT)
+      messagesQuery.refetch()
     }
-  }, [isInit, props.channel])
+  }, [isInit, messagesQuery, props.channel])
 
 
   if (messagesQuery.status == "error") {
