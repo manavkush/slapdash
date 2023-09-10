@@ -11,64 +11,24 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Channel } from "@prisma/client";
+import { useGlobalContext } from "@/src/context";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-export default function ChatSidebar({channels}: {channels:Channel[]}) {
-
+export default function ChatSidebar({ channels }: { channels: Channel[] }) {
+  const {setChannel} = useGlobalContext()
   return (
     <div className="bg-cyan-500 w-1/4 h-screen max-w-[15rem]">
-        <List>
-          {channels.map((channel, idx)  => <ListItem  disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                  </ListItemIcon>
-                  <ListItemText primary={channel.channelName} />
-                </ListItemButton>
-            </ListItem>
-          )}
-        </List>
+      <List>
+        {channels.map((channel, idx) => <ListItem key={channel.id} disablePadding onClick={() => {setChannel(channel); console.log(`Setting Channel: ${channel}`)}} >
+          <ListItemButton>
+            <ListItemIcon>
+            </ListItemIcon>
+            <ListItemText primary={channel.channelName} />
+          </ListItemButton>
+        </ListItem>
+        )}
+      </List>
     </div>
   );
 }
 
-
-
-
-          // <ListItem disablePadding>
-          //   <ListItemButton>
-          //     <ListItemIcon>
-          //     </ListItemIcon>
-          //     <ListItemText primary="Inbox" />
-          //   </ListItemButton>
-          // </ListItem>
-          // <ListItem disablePadding>
-          //   <ListItemButton>
-          //     <ListItemIcon>
-          //     </ListItemIcon>
-          //     <ListItemText primary="Drafts" />
-          //   </ListItemButton>
-          // </ListItem>

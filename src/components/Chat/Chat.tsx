@@ -45,7 +45,7 @@ const Chat = (props: ChatProps) => {
       setIsInit(true)
      
     }
-  }, [messagesQuery.status])
+  }, [messagesQuery.status, messagesQuery.data])
 
 
   // For non initialization 
@@ -64,8 +64,9 @@ const Chat = (props: ChatProps) => {
     return () => {
       console.log("Unsubscribing from pusher Channel")
       pusherChannel.unbind(MESSAGE_EVENT)
+      messagesQuery.refetch()
     }
-  }, [isInit])
+  }, [isInit, messagesQuery, props.channel])
 
 
   if (messagesQuery.status == "error") {

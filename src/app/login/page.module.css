@@ -53,6 +53,7 @@
     border-radius: 8px;
     background: #222;
     border: 0px;
+    color: white;
     /* margin: 1rem; */
   }
   .usernameInput, .passwordInput{
