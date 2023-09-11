@@ -17,7 +17,7 @@ import { useGlobalContext } from "@/src/context";
 export default function ChatSidebar({ channels }: { channels: Channel[] }) {
   const {setChannel} = useGlobalContext()
   return (
-    <div className="bg-cyan-500 w-1/4 h-screen max-w-[15rem]">
+    <div className="bg-cyan-500 w-1/4 min-h-screen max-w-[15rem]">
       <List>
         {channels.map((channel, idx) => <ListItem key={channel.id} disablePadding onClick={() => {setChannel(channel); console.log(`Setting Channel: ${channel}`)}} >
           <ListItemButton>

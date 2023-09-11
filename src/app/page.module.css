@@ -1,6 +1,7 @@
 .home {
-  background: #1D1D1F;
-  min-height: 100vh;
-  display: flex;
-  color: white;
+  @apply pt-16 overflow-hidden max-h-screen bg-[#1D1D1F] flex text-white 
 }
+
+/* .custom_class { */
+/*   @apply bg-[#1D1D1F] min-h-screen flex text-white  */
+/* } */

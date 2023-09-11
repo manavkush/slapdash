@@ -17,6 +17,11 @@ import Link from 'next/link';
 import { Channel, Message } from '@prisma/client';
 
 // import Navbar from '../components/Navbar/Navbar';
+//
+// background: #1D1D1F;
+// min-height: 100vh;
+// display: flex;
+// color: white;
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -60,7 +65,7 @@ export default function Home() {
   }
 
   if (channelQuery.status == "error") {
-    return <pre className={styles.home}>{JSON.stringify(channelQuery.error)}</pre>
+    return <pre className="bg-[#1D1D1F] flex text-white">{JSON.stringify(channelQuery.error)}</pre>
   }
   if (channelQuery.status == "loading") {
     return <div className={styles.home}></div>
