@@ -23,8 +23,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} ${spaceGrotesk.className}`}>
           <NextAuthProvider>
-            <Navbar />
             <GlobalContextProvider>
+              <Navbar />
               {children}
             </GlobalContextProvider>
           </NextAuthProvider>

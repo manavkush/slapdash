@@ -102,7 +102,7 @@ const Chat = (props: ChatProps) => {
  
   return (
     <div className='Chat-wrapper w-full'>
-      <ChatHistory messages={messages}/>
+      <ChatHistory user={props.user} messages={messages}/>
       <ChatInputBox messageSendHandle={sendMessageHandler} />
     </div>
   )

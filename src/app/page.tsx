@@ -23,7 +23,7 @@ export default function Home() {
   const [userChannels, setUserChannels] = useState<Channel[]>([])
 
   useEffect(() => {
-    setUser(session?.user?.id)
+    setUser(session?.user)
   }, [session?.user, setUser])
 
   // This function fetches all the channels for a given user.
@@ -61,7 +61,7 @@ export default function Home() {
   if (channelQuery.status == "error") {
     return <pre className={styles.home}>{JSON.stringify(channelQuery.error)}</pre>
   }
-  if (channelQuery.status == "loading") {
+  if (channelQuery.status == "loading" ) {
     return <div className={styles.home}></div>
   }
 
