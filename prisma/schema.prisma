@@ -19,6 +19,7 @@ model User {
   bio        String
   profilePic String
   config     ChannelUserConfig[]
+  messages Message[]
 }
 
 model Channel {
@@ -34,9 +35,11 @@ model Message {
   channelId         String
   channel           Channel  @relation(fields: [channelId], references: [id])
   fromUserId        String
+  user              User @relation(fields: [fromUserId], references: [uid])
   creationTimestamp DateTime @default(now())
 
   @@index([channelId])
+  @@index([fromUserId])
 }
 
 model ChannelUserConfig {
