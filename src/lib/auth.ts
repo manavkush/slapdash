@@ -38,7 +38,8 @@ export const authOptions: NextAuthOptions = {
                 // triggered on signin
                 return {
                     ...token,
-                    id: user.id
+                    id: user.id,
+                    name: user.name ? user.name : "",
                 }
             }
             return token
@@ -52,6 +53,7 @@ export const authOptions: NextAuthOptions = {
                 user: {
                     ...session.user,
                     id: token.id,
+                    name: token.name
                 }
             }
         }

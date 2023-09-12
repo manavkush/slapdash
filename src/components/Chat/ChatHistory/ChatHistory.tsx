@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Message } from '@prisma/client'
+import React, { useEffect, useRef} from 'react'
+import { Message, User } from '@prisma/client'
 import styles from "./ChatHistory.module.css"
+import ChatMessage from './ChatMessage/ChatMessage'
 
-const ChatHistory = (props: { messages: Message[] }) => {
+const ChatHistory = (props: { messages: Message[], user: Omit<User, "password">|null}) => {
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -16,11 +17,7 @@ const ChatHistory = (props: { messages: Message[] }) => {
   return (
     <div className={styles.chatHistory}>
       {props.messages.map((message) => {
-        return (
-          <p key={message.id}>
-            {message.text}
-          </p>
-        )
+        return <ChatMessage user={props.user} message={message} key={message.id}/>
       })}
       <div ref={messagesEndRef} />
     </div>
