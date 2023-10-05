@@ -1,9 +1,9 @@
 import { Message, User } from '@prisma/client'
 import React, { Fragment } from 'react'
 import styles from "./ChatMessage.module.css"
-import { messageWithUserType } from '@/src/types/types'
+import { TypeMessageWithBasicUser } from '@/src/types/types'
 
-const ChatMessage = (props: { message: messageWithUserType }) => {
+const ChatMessage = (props: { message: TypeMessageWithBasicUser }) => {
   const message = props.message
   const user = props.message.user
 
