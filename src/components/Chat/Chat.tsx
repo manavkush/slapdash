@@ -5,7 +5,7 @@ import { MESSAGE_EVENT } from '@/src/lib/stringConstants';
 import { ChatInputBox } from './Chatbox/ChatInputBox';
 import ChatHistory from './ChatHistory/ChatHistory';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { TypeUserGlobalContext, TypeUtilResponse, messageWithUserType } from '@/src/types/types';
+import { TypeUserGlobalContext, TypeUtilResponse, TypeMessageWithBasicUser } from '@/src/types/types';
 
 interface ChatProps {
   channel: Channel|null
@@ -13,7 +13,7 @@ interface ChatProps {
 }
 
 const Chat = (props: ChatProps) => {
-  const [messages, setMessages] = useState<messageWithUserType[]>([])
+  const [messages, setMessages] = useState<TypeMessageWithBasicUser[]>([])
   const [isInit, setIsInit] = useState(false)
   
   const fetchMessages = async () => {
@@ -33,7 +33,7 @@ const Chat = (props: ChatProps) => {
   useEffect(() => {
     if(messagesQuery.status == 'success') {
       console.log("MessageQuery.data", messagesQuery.data)
-      const newMessages = messagesQuery.data.channelMessages.map((message: messageWithUserGlobalContext) => {
+      const newMessages = messagesQuery.data.channelMessages.map((message: TypeMessageWithBasicUser) => {
         return {
           ...message,
           date: message.creationTimestamp.toString()
