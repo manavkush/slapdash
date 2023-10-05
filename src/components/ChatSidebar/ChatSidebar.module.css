@@ -1,0 +1,7 @@
+.chatSidebar {
+  @apply bg-[#183D3D] w-1/4 min-h-screen max-w-[15rem]
+}
+
+.MuiListItemButton-root {
+  @apply !p-0.5 !bg-red-400
+}

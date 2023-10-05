@@ -2,6 +2,7 @@ import PusherServer from "pusher";
 import PusherClient from "pusher-js"
 import { MESSAGE_EVENT } from "./stringConstants";
 import { Message } from "@prisma/client";
+import { TypeUserGlobalContext } from "../types/types";
 
 export const pusherServer = new PusherServer({
     appId: process.env.PUSHER_APP_ID!,
@@ -26,9 +27,10 @@ export const pusherClient = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!
 })
 // cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!
 
-export const pusherSendMessage = async (channelId: string, message: Message) => {
+export const pusherSendMessage = async (channelId: string, message: Message, user: TypeUserGlobalContext) => {
     const pusherSendMessageResponse = await pusherServer.trigger(channelId, MESSAGE_EVENT, {
-        message
+        message,
+        user
     })
     return pusherSendMessageResponse
 }

@@ -1,5 +1,5 @@
 .home {
-  @apply pt-16 overflow-hidden max-h-screen bg-[#1D1D1F] flex text-white 
+  @apply pt-16 overflow-hidden min-h-screen max-h-screen bg-[#1D1D1F] flex text-white 
 }
 
 /* .custom_class { */

@@ -2,21 +2,13 @@
 import { Channel, User } from '@prisma/client';
 import React, { useState } from 'react';
 import { createContext } from 'react';
-
-type userDataType = {
-    name: string,
-    id: string
-}
-type channelDataType = {
-    id: string,
-    channelName: string
-}
+import { TypeChannelGlobalContext, TypeUserGlobalContext } from '../types/types';
 
 interface GlobalContextProps {
-    user: userDataType | null,
+    user: TypeUserGlobalContext | null,
     channel: Channel | null,
-    setUser: (user: userDataType | null) => void,
-    setChannel: (channel: channelDataType | null) => void
+    setUser: (user: TypeUserGlobalContext | null) => void,
+    setChannel: (channel: TypeChannelGlobalContext | null) => void
 }
 
 export const GlobalContext = createContext<GlobalContextProps>({
@@ -27,8 +19,8 @@ export const GlobalContext = createContext<GlobalContextProps>({
 })
 
 export const GlobalContextProvider = (props: {children: React.ReactNode}) => {
-    const [user, setUser] = useState<null | userDataType>(null)
-    const [channel, setChannel] = useState<null | channelDataType>({
+    const [user, setUser] = useState<null | TypeUserGlobalContext>(null)
+    const [channel, setChannel] = useState<null | TypeChannelGlobalContext>({
         id: "fc340e14-372b-11ee-be56-0242ac120002",
         channelName: "test channel"
     })

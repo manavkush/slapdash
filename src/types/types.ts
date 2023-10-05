@@ -1,5 +1,17 @@
 import { DefaultSession } from "next-auth";
-import { User, ChannelUserConfig } from "@prisma/client";
+import { User, ChannelUserConfig, Message } from "@prisma/client";
+
+export type TypeUserGlobalContext = {
+    name: string,
+    id: string
+}
+export type TypeChannelGlobalContext = {
+    id: string,
+    channelName: string
+}
+export type messageWithUserType = Message & {
+  user: TypeUserGlobalContext
+}
 
 export type TypeDBUtilResponse = {
     status: boolean,
