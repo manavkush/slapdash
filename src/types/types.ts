@@ -9,7 +9,7 @@ export type TypeChannelGlobalContext = {
     id: string,
     channelName: string
 }
-export type messageWithUserType = Message & {
+export type TypeMessageWithBasicUser = Message & {
   user: TypeUserGlobalContext
 }
 
