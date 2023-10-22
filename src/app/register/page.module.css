@@ -1,6 +1,5 @@
 .registerContainer{
-    background: #1D1D1F;
-    min-height: 100vh;
+    @apply pt-8 overflow-hidden min-h-screen max-h-screen bg-[#1D1D1F] text-white;
 }
 
 .registerForm{
@@ -22,17 +21,15 @@
 }
 
 .registerButton{
-    width: 12rem;
-    height: 3.5rem;
-    padding:1rem;
-    font-size: 1.5rem;
+    /* width: 12rem; */
+    /* height: 3.5rem; */
+    /* padding:1rem; */
+    /* font-size: 1.5rem; */
+    @apply text-center flex flex-col items-center w-[12rem] h-12 text-xl pt-3 mt-3;
 }
 
 .registerContainer p{
-    color: white;
-    padding:auto;
-    text-align: center;
-    font-size: 12px;
+    @apply text-center text-white p-3
 }
 
 .registerHeading{
