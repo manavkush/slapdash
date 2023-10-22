@@ -32,7 +32,7 @@ export async function authenticateUser(username: string, password: string) {
         if (isPasswordCorrect) {
             return {
                 id: user.uid,
-                username: user.userName,
+                userName: user.userName,
                 name: user.name,
                 bio: user.bio,
                 profilePic: user.profilePic,
@@ -274,6 +274,9 @@ export const getMessageForChannel = async(channelId: string) => {
             },
             orderBy: {
                 creationTimestamp: "asc"
+            },
+            include: {
+                user: true
             }
         })
         return channelMessages;

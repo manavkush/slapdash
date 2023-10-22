@@ -1,0 +1,19 @@
+.chatMessage {
+   @apply bg-[#662549] p-1 rounded-lg
+}
+
+.chatMessage p {
+   @apply m-0
+}
+
+.chatMessageWrapper {
+   @apply p-1 w-3/4
+}
+
+.chatMessageUser {
+   @apply text-xs text-[#FF9B82]
+}
+
+.chatMessageText {
+   @apply text-base
+}

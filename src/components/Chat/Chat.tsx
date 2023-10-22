@@ -5,16 +5,15 @@ import { MESSAGE_EVENT } from '@/src/lib/stringConstants';
 import { ChatInputBox } from './Chatbox/ChatInputBox';
 import ChatHistory from './ChatHistory/ChatHistory';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { TypeUtilResponse } from '@/src/types/types';
+import { TypeUserGlobalContext, TypeUtilResponse, TypeMessageWithBasicUser } from '@/src/types/types';
 
 interface ChatProps {
   channel: Channel|null
-  user: Omit<User, "password">|null
+  user: TypeUserGlobalContext|null
 }
 
 const Chat = (props: ChatProps) => {
-  const [messages, setMessages] = useState<Message[]>([])
-  // const messages = useRef<Message[]>([])
+  const [messages, setMessages] = useState<TypeMessageWithBasicUser[]>([])
   const [isInit, setIsInit] = useState(false)
   
   const fetchMessages = async () => {
@@ -34,7 +33,7 @@ const Chat = (props: ChatProps) => {
   useEffect(() => {
     if(messagesQuery.status == 'success') {
       console.log("MessageQuery.data", messagesQuery.data)
-      const newMessages = messagesQuery.data.channelMessages.map((message: Message) => {
+      const newMessages = messagesQuery.data.channelMessages.map((message: TypeMessageWithBasicUser) => {
         return {
           ...message,
           date: message.creationTimestamp.toString()
@@ -56,9 +55,12 @@ const Chat = (props: ChatProps) => {
     }
 
     const pusherChannel = pusherClient.subscribe(props.channel!.id)
-    pusherChannel.bind(MESSAGE_EVENT, (data: {message: Message}) => {
+    pusherChannel.bind(MESSAGE_EVENT, (data: {message: Message, user: TypeUserGlobalContext}) => {
       console.log(`Caught Message Event: ${JSON.stringify(data.message)}`)
-      setMessages((prevMessages) => [...prevMessages, data.message])
+      console.log(data.user)
+      const user = data.user
+      const newMessage = {...data.message, user}
+      setMessages((prevMessages) => [...prevMessages, newMessage])
     })
 
     return () => {
@@ -91,7 +93,8 @@ const Chat = (props: ChatProps) => {
       },
       body: JSON.stringify({
         text: messageText,
-        channelId: props.channel?.id
+        channelId: props.channel?.id,
+        user: props.user,
       })
     }
 
