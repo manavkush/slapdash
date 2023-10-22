@@ -9,6 +9,7 @@ import { useGlobalContext } from "../context/index"
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { Channel } from '@prisma/client';
+import Dashboard from '../components/Landing/Landing';
 
 
 export default function Home() {
@@ -30,6 +31,7 @@ export default function Home() {
     return channelsObj
   }
 
+  // using queryClient is important for reactQuery (even if it's not used as per warning)
   const queryClient = useQueryClient();
   const channelQuery = useQuery({
     queryKey: ["channels"],
@@ -47,11 +49,12 @@ export default function Home() {
 
   // Early return for when the user is not signed in
   if (status != "authenticated") {
-    return <div className={styles.home}>
-      <p>Dashboard<br />
-        You&apos;re not Signed In<br />
-        <Link href="/login"> Click here </Link> login </p>
-    </div>
+    return <Dashboard />
+    // return <div className={styles.home}>
+    //   <p>Dashboard<br />
+    //     You&apos;re not Signed In<br />
+    //     <Link href="/login"> Click here </Link> login </p>
+    // </div>
   }
 
   if (channelQuery.status == "error") {

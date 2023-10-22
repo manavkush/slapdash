@@ -1,0 +1,15 @@
+.landing {
+  @apply pt-16 overflow-hidden min-h-screen max-h-screen bg-[#1D1D1F] flex text-white 
+}
+
+.landing__left {
+  @apply w-1/2 flex flex-col justify-center items-center
+}
+
+.landing__left h1 {
+  @apply text-center
+}
+
+.landing__right {
+  @apply w-1/2 flex flex-col justify-center items-center
+}
