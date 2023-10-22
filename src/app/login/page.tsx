@@ -104,7 +104,7 @@ export default function Login() {
                 </Button>
               </div>
             </form>
-            <p>Don&apos;t have a account? Register Now!</p>
+            <p>Don&apos;t have a account? <button onClick={() => {router.push("/register")}} >Register Now!</button></p>
           </div>
           <div className="d-flex">
             <div className={styles.vr}></div>
