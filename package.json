@@ -4,11 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run postinstall && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate",
-    "preinstall": "npx only-allow pnpm"
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -20,15 +19,11 @@
     "@headlessui/react": "^1.7.17",
     "@hookform/resolvers": "^3.1.1",
     "@material-tailwind/react": "^2.1.1",
-    "@mui/material": "^5.14.7",
     "@prisma/client": "^5.1.1",
     "@tanstack/react-query": "^4.29.19",
     "@types/node": "20.3.1",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
-    "Box": "link:@mui/material/Box",
-    "Tab": "link:@mui/material/Tab",
-    "Tabs": "link:@mui/material/Tabs",
     "bcrypt": "^5.1.0",
     "bootstrap": "4.1",
     "encoding": "^0.1.13",
@@ -52,7 +47,7 @@
     "@types/bcrypt": "^5.0.0",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.26",
-    "prisma": "^5.1.1",
+    "prisma": "^5.4.2",
     "tailwindcss": "^3.3.3",
     "zod": "^3.21.4"
   }
