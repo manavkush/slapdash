@@ -1,0 +1,10 @@
+services:
+  slapdash:
+    image: slapdash
+    ports:
+      - "4000:3000"
+    volumes:
+      - "/data"
+    env_file:
+        - .env
+        - .env.local
