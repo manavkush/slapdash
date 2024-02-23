@@ -2,25 +2,20 @@ name: NodeJS with Webpack
 
 on:
   push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master", "*" ]
 
 jobs:
-  build:
+  cache-install-build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
+      - name: Checkout
       - uses: actions/checkout@v3
   
-      - name: Install Node.js ${{ matrix.node-version }}
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
   
       - name: Install pnpm
         uses: pnpm/action-setup@v3
@@ -40,6 +35,8 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+
+      - name: Install pnpm
         run: pnpm install
         
       - name: Build with Nextjs
