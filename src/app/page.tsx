@@ -32,7 +32,7 @@ export default function Home() {
   }
 
   // using queryClient is important for reactQuery (even if it's not used as per warning)
-  const queryClient = useQueryClient();
+  useQueryClient();
   const channelQuery = useQuery({
     queryKey: ["channels"],
     queryFn: fetchChannels,
@@ -50,11 +50,6 @@ export default function Home() {
   // Early return for when the user is not signed in
   if (status != "authenticated") {
     return <Dashboard />
-    // return <div className={styles.home}>
-    //   <p>Dashboard<br />
-    //     You&apos;re not Signed In<br />
-    //     <Link href="/login"> Click here </Link> login </p>
-    // </div>
   }
 
   if (channelQuery.status == "error") {
