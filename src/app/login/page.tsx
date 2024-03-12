@@ -57,8 +57,7 @@ export default function Login() {
   
   
   return (
-    <>
-      <div className="bg-[#1D1D1F] min-h-screen">
+      <div className="bg-[#1D1D1F] min-h-screen flex flex-col justify-around">
       <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -71,10 +70,10 @@ export default function Login() {
           pauseOnHover
           theme="light"
       />
-        <div className="login-heading text-[#FFF] text-center text-2xl font-medium pt-20 sm:text-4xl">Login to Your Account</div>
+        <div className="login-heading text-[#FFF] text-center text-2xl font-medium pt-32 sm:text-4xl">Login to Your Account</div>
         <div className="login-container flex flex-col w-full m-auto pt-4 lg:flex-row lg:pt-10 lg:pb-10">
-          <div className="login-form-container flex flex-col w-3/4 sm:w-1/2 m-auto">
-            <form className="login-form w-full lg:w-3/5 flex flex-col justify-evenly gap-4 m-auto" onSubmit={handleSubmit(submitData)} >
+          <div className="login-form-container flex flex-col sm:w-1/2 self-center items-center">
+            <form className="login-form w-full lg:w-3/5 flex flex-col justify-evenly gap-4" onSubmit={handleSubmit(submitData)} >
               <input
                 className="h-16 p-4 bg-[#222] rounded-lg text-white"
                 type="text"
@@ -131,6 +130,5 @@ export default function Login() {
         </div>
         <div className="forgot-passowrd text-white text-center text-l p-4">Forgot Password</div>
       </div>
-    </>
   );
 }

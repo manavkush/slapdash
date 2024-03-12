@@ -16,7 +16,7 @@ const ChatHistory = (props: { messages: TypeMessageWithBasicUser[]}) => {
   }, [props.messages])
 
   return (
-    <div className={styles.chatHistory}>
+    <div className="px-1 overflow-x-hidden overflow-y-scroll h-[calc(100%-5rem)]">
       {props.messages.map((message) => {
         return <ChatMessage message={message} key={message.id}/>
       })}

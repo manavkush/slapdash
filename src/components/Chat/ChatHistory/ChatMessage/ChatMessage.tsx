@@ -1,6 +1,4 @@
-import { Message, User } from '@prisma/client'
 import React, { Fragment } from 'react'
-import styles from "./ChatMessage.module.css"
 import { TypeMessageWithBasicUser } from '@/src/types/types'
 
 const ChatMessage = (props: { message: TypeMessageWithBasicUser }) => {
@@ -13,10 +11,10 @@ const ChatMessage = (props: { message: TypeMessageWithBasicUser }) => {
   console.log("DEBUG: ", user)
 
   return (
-    <div className={styles.chatMessageWrapper}>
-      <div key={message.id} className={styles.chatMessage}>
-        <p className={styles.chatMessageUser}>{message.user.name}</p>
-        <p className={styles.chatMessageText}>{message.text}</p>
+    <div className="p-1 w-full">
+      <div key={message.id} className="bg-[#1B4242] p-1 rounded-lg">
+        <p className="flex m-0 text-sm text-[#9EC8B9]">{message.user.name}</p>
+        <p className="text-base">{message.text}</p>
       </div>
     </div>
   )
