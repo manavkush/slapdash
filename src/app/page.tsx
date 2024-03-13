@@ -7,7 +7,6 @@ import ChatSidebar from '../components/ChatSidebar/ChatSidebar';
 import Chat from '../components/Chat/Chat';
 import { useGlobalContext } from "../context/index"
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
 import { Channel } from '@prisma/client';
 import Dashboard from '../components/Landing/Landing';
 
