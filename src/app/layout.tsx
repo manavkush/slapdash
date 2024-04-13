@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import Navbar from "../components/Navbar/Navbar";
 import { NextAuthProvider } from "./providers";
 import { GlobalContextProvider } from "../context/GlobalContext";
+import {SpeedInsights} from "@vercel/speed-insights/next"
+import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
@@ -28,6 +30,8 @@ export default function RootLayout({
               {children}
             </GlobalContextProvider>
           </NextAuthProvider>
+          <SpeedInsights />
+          <Analytics />
       </body>
     </html>
   );

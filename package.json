@@ -26,6 +26,8 @@
     "@types/node": "20.3.1",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
+    "@vercel/analytics": "^1.2.2",
+    "@vercel/speed-insights": "^1.0.10",
     "Box": "link:@mui/material/Box",
     "Tab": "link:@mui/material/Tab",
     "Tabs": "link:@mui/material/Tabs",
