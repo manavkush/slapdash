@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Slapdash
+![slapdash](https://github.com/manavkush/slapdash/assets/64668859/ba98e4d9-e877-4a61-bb99-ea9348579f2a)
+
 
 ## Getting Started
 
