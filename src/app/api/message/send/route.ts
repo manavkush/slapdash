@@ -40,7 +40,7 @@ const sendMessage = async (req: Request) => {
       pusherMessage,
       { id: session.user.id, name: session.user.name! },
     );
-    console.log("INFO: PUSHER SEND MESSAGE RESPONSE RECE IVED.");
+    console.log("INFO: PUSHER SEND MESSAGE RESPONSE RECEIVED.");
     const response = await addMessageToDb(messageObject, uid);
 
     console.log("INFO: addMessageToDb Response: ", response.data?.message);
