@@ -11,6 +11,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/markbates/goth"
 )
 
 // Service represents a service that interacts with a database.
@@ -18,6 +19,7 @@ type Service interface {
 	// Health returns a map of health status information.
 	// The keys and values in the map are service-specific.
 	Health() map[string]string
+	AddNewUser(*goth.User) error
 
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
@@ -117,4 +119,28 @@ func (s *service) Health() map[string]string {
 func (s *service) Close() error {
 	log.Printf("Disconnected from database: %s", dbname)
 	return s.db.Close()
+}
+
+func (s *service) AddNewUser(gothUser *goth.User) error {
+	row := s.db.QueryRow("SELECT count(*) FROM users WHERE name=? AND username=? AND email=?", gothUser.Name, gothUser.UserID, gothUser.Email)
+	var count int
+	err := row.Scan(&count)
+	if err != nil {
+		log.Printf("Error in checking if the user exists in the database. Err: %v", err)
+		return err
+	}
+
+	// If the user already exists
+	if count == 1 {
+		return nil
+	}
+
+	// Add the user to the database
+	_, err := s.db.Exec("INSERT INTO users (name, email, username, avatar) values (?, ?, ?, ?)", gothUser.Name, gothUser.Email, gothUser.UserID, gothUser.AvatarURL)
+	if err != nil {
+		log.Printf("Error in inserting a new user to the database. Err: %v", err)
+		return err
+	}
+
+	return nil
 }
