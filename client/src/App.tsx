@@ -1,45 +1,37 @@
-import { createSignal } from 'solid-js'
-import solidLogo from './assets/solid.svg'
-import viteLogo from '/vite.svg'
+import { createResource } from 'solid-js'
 import './App.css'
+import { Homepage } from './components/Homepage'
+import { Navbar } from './components/Navbar'
+import { Route, Router } from '@solidjs/router'
+import { Team } from './components/Team'
 
 function App() {
-  const [count, setCount] = createSignal(0)
+  const [user] = createResource(getUser)
 
-  function handleLogin() {
-    window.location.href = "http://localhost:3000/auth/google"
+  // Checks the backend if the user is logged-in
+  async function getUser() {
+    const response = await fetch("http://localhost:3000/getUser", {
+      credentials: 'include'
+    })
+    const responseJson = await response.json()
+    if (responseJson.error == "1") {
+      return null
+    }
+
+    responseJson.user = JSON.parse(responseJson.user)
+    return responseJson
   }
 
+  // <Navbar user={null} />
+  console.log("App")
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://solidjs.com" target="_blank">
-          <img src={solidLogo} class="logo solid" alt="Solid logo" />
-        </a>
-      </div>
-      <h1>Vite + Solid</h1>
-      <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count()}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-
-      <div class="card">
-        <button onClick={handleLogin}>
-          Login with Google
-        </button>
-      </div>
-      <p class="read-the-docs">
-        Click on the Vite and Solid logos to learn more
-      </p>
-    </>
+    <Router root={() => <Navbar user={user()} />}>
+      <Route path="/" component={() => <Homepage user={user()} />} />
+      <Route path="/team" component={Team} />
+    </Router>
   )
+  // <Suspense fallback={<div>Loading</div>}>
+  // </Suspense>
 }
 
 export default App

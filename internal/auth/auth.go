@@ -30,7 +30,7 @@ func NewAuth() {
 	store := sessions.NewCookieStore([]byte(key))
 	store.MaxAge(MaxAge)
 	store.Options.Path = "/"
-	store.Options.HttpOnly = true // HttpOnly should always be enabled
+	store.Options.HttpOnly = false // HttpOnly should always be enabled
 	store.Options.Secure = IsProd
 
 	gothic.Store = store

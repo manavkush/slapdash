@@ -122,6 +122,7 @@ func (s *service) Close() error {
 }
 
 func (s *service) AddNewUser(gothUser *goth.User) error {
+	log.Println("Adding new user.")
 	row := s.db.QueryRow("SELECT count(*) FROM users WHERE name=? AND username=? AND email=?", gothUser.Name, gothUser.UserID, gothUser.Email)
 	var count int
 	err := row.Scan(&count)
@@ -136,7 +137,7 @@ func (s *service) AddNewUser(gothUser *goth.User) error {
 	}
 
 	// Add the user to the database
-	_, err := s.db.Exec("INSERT INTO users (name, email, username, avatar) values (?, ?, ?, ?)", gothUser.Name, gothUser.Email, gothUser.UserID, gothUser.AvatarURL)
+	_, err = s.db.Exec("INSERT INTO users (name, email, username, avatar) values (?, ?, ?, ?)", gothUser.Name, gothUser.Email, gothUser.UserID, gothUser.AvatarURL)
 	if err != nil {
 		log.Printf("Error in inserting a new user to the database. Err: %v", err)
 		return err
