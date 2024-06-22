@@ -1,12 +1,15 @@
-import { Show } from "solid-js";
+import { Resource, Show, useContext } from "solid-js";
 import { Dashboard } from "./Dashboard";
 import { Landing } from "./Landing";
+import { UserContext } from "../App";
 
-export function Homepage(props: { user: any }) {
-  console.log("Homepage")
+export function Homepage() {
+  const user: Resource<any> = useContext(UserContext)
+
   return (
-    <Show when={props.user != null} fallback={<Landing />}>
+    <Show when={user() != undefined} fallback={< Landing />}>
       <Dashboard />
-    </Show>
+      {user().Email}
+    </Show >
   )
 }

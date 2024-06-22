@@ -1,14 +1,19 @@
-import { createResource } from 'solid-js'
+import { Context, ParentComponent, Resource, Suspense, createContext, createResource } from 'solid-js'
 import './App.css'
-import { Homepage } from './components/Homepage'
 import { Navbar } from './components/Navbar'
-import { Route, Router } from '@solidjs/router'
-import { Team } from './components/Team'
 
-function App() {
+export const UserContext: Context<any> = createContext()
+
+/**
+ * App is the wrapper component for all the routes
+ * It creates context and passes it to all the child components
+ */
+const App: ParentComponent<{}> = (props) => {
   const [user] = createResource(getUser)
 
-  // Checks the backend if the user is logged-in
+  /* 
+   * Gets the user info from the backend.
+  */
   async function getUser() {
     const response = await fetch("http://localhost:3000/getUser", {
       credentials: 'include'
@@ -19,19 +24,18 @@ function App() {
     }
 
     responseJson.user = JSON.parse(responseJson.user)
-    return responseJson
+    return responseJson.user
   }
 
-  // <Navbar user={null} />
-  console.log("App")
   return (
-    <Router root={() => <Navbar user={user()} />}>
-      <Route path="/" component={() => <Homepage user={user()} />} />
-      <Route path="/team" component={Team} />
-    </Router>
+    <Suspense fallback={<div> Loading </div >}>
+      <UserContext.Provider value={user} >
+        <Navbar>
+          {props.children}
+        </Navbar>
+      </UserContext.Provider>
+    </Suspense >
   )
-  // <Suspense fallback={<div>Loading</div>}>
-  // </Suspense>
 }
 
 export default App

@@ -98,9 +98,23 @@ func (s *Server) HandleLogout(w http.ResponseWriter, r *http.Request) {
 	provider := chi.URLParam(r, "provider")
 	r = r.WithContext(context.WithValue(context.Background(), "provider", provider))
 
-	gothic.Logout(w, r)
+	err := gothic.Logout(w, r)
+	if err != nil {
+		log.Println("Error in logging out the user. Err: ", err)
+		return
+	}
+
+	sessionValue, _ := sessionStore.Get(r, "goChat-session")
+	sessionValue.Values["user"] = nil
+	sessionValue.Options.MaxAge = -1
+
+	err = sessionValue.Save(r, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, r, "http://localhost:5173", http.StatusTemporaryRedirect)
-	// w.Header().Set("Location", "http:/")
+	// w.Header().Set("Location", "/")
 	// w.WriteHeader(http.StatusTemporaryRedirect)
 }
 
@@ -138,7 +152,7 @@ func (s *Server) GetUserData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	resp := map[string]string{}
-	if !ok {
+	if (!ok) || (user == nil) {
 		resp["error"] = "1"
 		resp["msg"] = "Unable to find the session cookie. User needs to sign-in."
 		err := json.NewEncoder(w).Encode(resp)
