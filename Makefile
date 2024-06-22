@@ -3,6 +3,9 @@
 # Build the application
 all: build
 
+client:
+	cd client && pnpm run dev
+
 build:
 	@echo "Building..."
 	
@@ -58,4 +61,4 @@ watch:
 	    fi; \
 	fi
 
-.PHONY: all build run test clean
+.PHONY: all build run test clean client
