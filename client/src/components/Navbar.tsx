@@ -8,7 +8,7 @@ export const Navbar: ParentComponent<{}> = (props) => {
   /* ${isMobileMenuOpen ? styles.open : ''}*/
   return (
     <>
-      <nav class={`w-full h-24 md:h-16 flex md:flex-row flex-col justify-between fixed p-4 top-0 left-0 z-50 bg-gradient-to-r from-[#000000] to-[#222222] text-[#ffffff]`}>
+      <nav class={`w-full h-24 md:h-16 flex md:flex-row flex-col justify-between fixed p-4 top-0 left-0 bg-gradient-to-r from-[#000000] to-[#222222] text-[#ffffff]`}>
         <div>
           <A class='text-[#ffffff] text-2xl hover:text-[#c8c8c3]' href="/" >
             Slapdash
