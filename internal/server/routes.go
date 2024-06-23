@@ -36,6 +36,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Get("/getUser", s.GetUserData)
 	r.Get("/user/create", s.RequireAuth(s.HandleNewUser))
 
+	// Chat routes
+	r.Get("/chat/get", s.RequireAuth(s.GetUserChats))
+
 	return r
 }
 
@@ -54,7 +57,7 @@ func (s *Server) HelloWorldHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
-	jsonResp, _ := json.Marshal(s.db.Health())
+	jsonResp, _ := json.Marshal(s.Db.Health())
 	_, _ = w.Write(jsonResp)
 }
 
@@ -90,7 +93,8 @@ func (s *Server) HandleAuthCallbackFunction(w http.ResponseWriter, r *http.Reque
 	session.Values["user"] = gothUser
 	session.Save(r, w)
 
-	http.Redirect(w, r, "http://localhost:5173", http.StatusFound)
+	// s.HandleNewUser(w, r)
+	http.Redirect(w, r, "/user/create", http.StatusFound)
 }
 
 // HandleLogout is used to logout the user of the authentication
@@ -122,8 +126,7 @@ func (s *Server) HandleLogout(w http.ResponseWriter, r *http.Request) {
 func (s *Server) RequireAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		sessionValue, _ := sessionStore.Get(r, "goChat-session")
-		user, ok := sessionValue.Values["user"]
-		log.Println("Session user: ", user)
+		_, ok := sessionValue.Values["user"]
 		if !ok {
 			log.Println("User not logged in. Redirecting to the auth page.")
 			// the user is not logged in. Redirect to the login page
@@ -187,11 +190,24 @@ func (s *Server) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "http://localhost:3000/auth/google", http.StatusTemporaryRedirect)
 		return
 	}
-	err := s.db.AddNewUser(&user)
+	err := s.Db.AddNewUser(&user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Error in creating new user."))
 		return
 	}
-	w.Write([]byte("Successfully created new user."))
+	// w.Write([]byte("Successfully created new user."))
+	http.Redirect(w, r, "http://localhost:5173", http.StatusTemporaryRedirect)
+}
+
+// ============================= Chat Handlers ======================================
+
+func (s *Server) GetUserChats(w http.ResponseWriter, r *http.Request) {
+	sessionVal, _ := sessionStore.Get(r, "goChat-session")
+	_, ok := sessionVal.Values["user"].(goth.User)
+	if !ok {
+		http.Redirect(w, r, "http://localhost:3000/auth/google", http.StatusTemporaryRedirect)
+		return
+	}
+
 }

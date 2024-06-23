@@ -33,6 +33,43 @@ func InitDB() {
 		return
 	}
 
+	query = `
+		CREATE TABLE IF NOT EXISTS channels(
+			id INT AUTO_INCREMENT,
+			name VARCHAR(63),
+			descr VARCHAR(255),
+			last_message_ts DATETIME DEFAULT CURRENT_TIMESTAMP,
+			uid INT NOT NULL,
+			PRIMARY KEY (id),
+			FOREIGN KEY (uid) REFERENCES users(uid),
+			INDEX (uid)
+		);
+	`
+	_, err = db.Exec(query)
+	if err != nil {
+		log.Printf("Error in creating channels table. %v\n", err)
+		return
+	}
+
+	query = `
+		CREATE TABLE IF NOT EXISTS messages(
+			id INT AUTO_INCREMENT,
+			content BLOB,
+			timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+			from_uid INT NOT NULL,
+			channel_id INT,
+			PRIMARY KEY (id),
+			FOREIGN KEY (from_uid) REFERENCES users(uid),
+			FOREIGN KEY (channel_id) REFERENCES channels(id),
+			INDEX (channel_id)
+		);
+	`
+	_, err = db.Exec(query)
+	if err != nil {
+		log.Printf("Error in creating messages table. %v\n", err)
+		return
+	}
+
 	err = db.Close()
 	if err != nil {
 		log.Printf("Error in closing db connection %v\n", err)

@@ -30,6 +30,13 @@ type service struct {
 	db *sql.DB
 }
 
+type ChatMetadata struct {
+	id            string
+	name          string
+	lastMessageTS time.Time
+	lastMessage   string
+}
+
 var (
 	dbname     = os.Getenv("DB_DATABASE")
 	password   = os.Getenv("DB_PASSWORD")
@@ -122,7 +129,6 @@ func (s *service) Close() error {
 }
 
 func (s *service) AddNewUser(gothUser *goth.User) error {
-	log.Println("Adding new user.")
 	row := s.db.QueryRow("SELECT count(*) FROM users WHERE name=? AND username=? AND email=?", gothUser.Name, gothUser.UserID, gothUser.Email)
 	var count int
 	err := row.Scan(&count)
@@ -142,6 +148,19 @@ func (s *service) AddNewUser(gothUser *goth.User) error {
 		log.Printf("Error in inserting a new user to the database. Err: %v", err)
 		return err
 	}
+	log.Println("Successfully added new user.")
 
+	return nil
+}
+
+func (s *service) GetUserChats(gothUser *goth.User) []ChatMetadata {
+	_, err := s.db.Query("SELECT * FROM chats WHERE uid = ? ORDER BY lastMessageTS DESC", gothUser.UserID)
+	if err != nil {
+		log.Println("Error in getting chats from db")
+	}
+
+	// for rows.Next() == true {
+	// 	row := rows.Scan()
+	// }
 	return nil
 }
