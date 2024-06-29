@@ -21,13 +21,13 @@ export const Navbar: ParentComponent<{}> = (props) => {
           </A>
 
           <Show when={user() == undefined}>
-            <A class="text-[#ffffff] text-l hover:text-[#c8c8c3] pl-4" href="http://localhost:3000/auth/google">
+            <A class="text-[#ffffff] text-l hover:text-[#c8c8c3] pl-4" href={`${import.meta.env.VITE_BACKEND_URI}/auth/google`}>
               Login
             </A>
           </Show>
 
           <Show when={user() != undefined} >
-            <A class="text-[#ffffff] text-l hover:text-[#c8c8c3] pl-4" href='http://localhost:3000/auth/logout/google'>
+            <A class="text-[#ffffff] text-l hover:text-[#c8c8c3] pl-4" href={`${import.meta.env.VITE_BACKEND_URI}/auth/logout/google`}>
               Logout
             </A>
           </Show>
@@ -36,7 +36,7 @@ export const Navbar: ParentComponent<{}> = (props) => {
             Team
           </A>
         </div>
-      </nav>
+      </nav >
       {props.children}
     </>
   );

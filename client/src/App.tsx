@@ -15,7 +15,7 @@ const App: ParentComponent<{}> = (props) => {
    * Gets the user info from the backend.
   */
   async function getUser() {
-    const response = await fetch("http://localhost:3000/getUser", {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URI}/getUser`, {
       credentials: 'include'
     })
     const responseJson = await response.json()

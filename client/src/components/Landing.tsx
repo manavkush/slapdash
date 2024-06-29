@@ -1,7 +1,7 @@
 import { createSignal } from 'solid-js'
 
 function handleLogin() {
-  window.location.href = "http://localhost:3000/auth/google"
+  window.location.href = `${import.meta.env.BACKEND_URI}/auth/google`
 }
 
 export function Landing() {
