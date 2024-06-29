@@ -6,6 +6,7 @@ import (
 	"goChat/internal/utils"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -117,9 +118,7 @@ func (s *Server) HandleLogout(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	http.Redirect(w, r, "http://localhost:5173", http.StatusTemporaryRedirect)
-	// w.Header().Set("Location", "/")
-	// w.WriteHeader(http.StatusTemporaryRedirect)
+	http.Redirect(w, r, os.Getenv("FRONTEND_URI"), http.StatusTemporaryRedirect)
 }
 
 // Auth Middleware to check if the user is logged in.
@@ -152,7 +151,7 @@ func (s *Server) GetUserData(w http.ResponseWriter, r *http.Request) {
 	sessionValue, _ := sessionStore.Get(r, "goChat-session")
 	user, ok := sessionValue.Values["user"]
 
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("FRONTEND_URI"))
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 	resp := map[string]string{}
 	if (!ok) || (user == nil) {
@@ -192,7 +191,7 @@ func (s *Server) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// w.Write([]byte("Successfully created new user."))
-	http.Redirect(w, r, "http://localhost:5173", http.StatusTemporaryRedirect)
+	http.Redirect(w, r, os.Getenv("FRONTEND_URI"), http.StatusTemporaryRedirect)
 }
 
 func (s *Server) GetAllUsers(w http.ResponseWriter, r *http.Request) {
@@ -214,7 +213,7 @@ func (s *Server) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetUserChats(w http.ResponseWriter, r *http.Request) {
 	// Check for user authorization
 	gothUser := utils.CheckAuthorization(w, r, *sessionStore)
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("FRONTEND_URI"))
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
 
 	// Extract the uid
