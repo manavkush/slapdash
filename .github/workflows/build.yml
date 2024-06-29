@@ -7,13 +7,18 @@ on:
       - v2
 
 jobs:
-  build_pull_request:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.22'
-      - run: go mod download
-      - run: make build
+      - name: Checkout Source
+        uses: actions/checkout@v4
 
+      - name: Login to Dockerhub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build docker image
+        run: docker build -t manavkush/slapdash-backend .
+
+      - name: Push image to Dockerhub
+        run docker push manavkush/slapdash-backend:latest
+  
