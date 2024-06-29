@@ -20,5 +20,5 @@ jobs:
         run: docker build -t manavkush/slapdash-backend .
 
       - name: Push image to Dockerhub
-        run docker push manavkush/slapdash-backend:latest
+        run: docker push manavkush/slapdash-backend:latest
   
