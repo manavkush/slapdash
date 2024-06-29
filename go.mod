@@ -7,9 +7,9 @@ require (
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/gorilla/securecookie v1.1.2
 	github.com/gorilla/sessions v1.2.2
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/markbates/goth v1.80.0
-	github.com/qustavo/dotsql v1.2.0
 )
 
 require (

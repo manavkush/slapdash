@@ -1,4 +1,4 @@
-import { Context, ParentComponent, Resource, Suspense, createContext, createResource } from 'solid-js'
+import { Context, ParentComponent, Suspense, createContext, createResource } from 'solid-js'
 import './App.css'
 import { Navbar } from './components/Navbar'
 

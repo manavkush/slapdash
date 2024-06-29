@@ -2,8 +2,8 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	"log"
 	"os"
 	"strconv"
@@ -20,6 +20,9 @@ type Service interface {
 	// The keys and values in the map are service-specific.
 	Health() map[string]string
 	AddNewUser(*goth.User) error
+	GetAllUsers() ([]UserInfo, error)
+	GetUserChats(string) ([]ChatMetadata, error)
+	GetUserId(*goth.User) (string, error)
 
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
@@ -27,14 +30,21 @@ type Service interface {
 }
 
 type service struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 type ChatMetadata struct {
-	id            string
-	name          string
-	lastMessageTS time.Time
-	lastMessage   string
+	Id            string    `db:"id"`
+	Name          string    `db:"name"`
+	LastMessageTS time.Time `db:"last_message_ts"`
+}
+
+type UserInfo struct {
+	Name     string
+	Id       string
+	Username string
+	Email    string
+	Avatar   string
 }
 
 var (
@@ -53,7 +63,7 @@ func New() Service {
 	}
 
 	// Opening a driver typically will not attempt to connect to the database.
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname))
+	db, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname))
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.
@@ -129,7 +139,7 @@ func (s *service) Close() error {
 }
 
 func (s *service) AddNewUser(gothUser *goth.User) error {
-	row := s.db.QueryRow("SELECT count(*) FROM users WHERE name=? AND username=? AND email=?", gothUser.Name, gothUser.UserID, gothUser.Email)
+	row := s.db.QueryRow("SELECT count(*) FROM users WHERE provider=? AND email=?", gothUser.Provider, gothUser.Email)
 	var count int
 	err := row.Scan(&count)
 	if err != nil {
@@ -143,7 +153,7 @@ func (s *service) AddNewUser(gothUser *goth.User) error {
 	}
 
 	// Add the user to the database
-	_, err = s.db.Exec("INSERT INTO users (name, email, username, avatar) values (?, ?, ?, ?)", gothUser.Name, gothUser.Email, gothUser.UserID, gothUser.AvatarURL)
+	_, err = s.db.Exec("INSERT INTO users (provider, name, email, avatar) values (?, ?, ?, ?)", gothUser.Provider, gothUser.Name, gothUser.Email, gothUser.AvatarURL)
 	if err != nil {
 		log.Printf("Error in inserting a new user to the database. Err: %v", err)
 		return err
@@ -153,14 +163,60 @@ func (s *service) AddNewUser(gothUser *goth.User) error {
 	return nil
 }
 
-func (s *service) GetUserChats(gothUser *goth.User) []ChatMetadata {
-	_, err := s.db.Query("SELECT * FROM chats WHERE uid = ? ORDER BY lastMessageTS DESC", gothUser.UserID)
+// Gets the uid of the given user by using provider and email
+func (s *service) GetUserId(gothUser *goth.User) (string, error) {
+	row := s.db.QueryRow("SELECT uid FROM users WHERE provider=? AND email=?", gothUser.Provider, gothUser.Email)
+
+	var uid string
+	if err := row.Scan(uid); err != nil {
+		return "", err
+	}
+	return uid, nil
+}
+
+func (s *service) GetUserChats(uid string) ([]ChatMetadata, error) {
+	rows, err := s.db.Queryx("SELECT * FROM channels WHERE uid = ? ORDER BY last_message_ts DESC", uid)
 	if err != nil {
-		log.Println("Error in getting chats from db")
+		log.Println("Error in getting chats from db. Err: ", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	ChatList := make([]ChatMetadata, 0)
+	for rows.Next() {
+		var chatMetadata ChatMetadata
+		if err := rows.StructScan(&chatMetadata); err != nil {
+			log.Println("Error while getting user chats from db. Err: ", err)
+			continue
+		}
+		ChatList = append(ChatList, chatMetadata)
 	}
 
-	// for rows.Next() == true {
-	// 	row := rows.Scan()
-	// }
-	return nil
+	for rows.Err() != nil {
+		return ChatList, err
+	}
+	return ChatList, nil
+}
+
+func (s *service) GetAllUsers() ([]UserInfo, error) {
+	rows, err := s.db.Query("SELECT name, uid, email, username, avatar FROM users")
+	if err != nil {
+		log.Println("Error in getting all users. Err: ", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	usersList := make([]UserInfo, 0)
+	for rows.Next() {
+		var userInfo UserInfo
+		if err := rows.Scan(&userInfo.Name, &userInfo.Id, &userInfo.Email, &userInfo.Username, &userInfo.Avatar); err != nil {
+			return usersList, err
+		}
+		usersList = append(usersList, userInfo)
+	}
+	if err := rows.Err(); err != nil {
+		return usersList, err
+	}
+
+	return usersList, nil
 }

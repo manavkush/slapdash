@@ -9,7 +9,7 @@ function ChatSidebarItem(props: { item: any }) {
 
 export const ChatSidebar = (props: any) => {
   const chatList: Array<any> = props.chatList
-  return <div>
+  return <div class="flex-initial w-1/4">
     <div class="chat-controls"></div>
     <div class="chat-list">
       <For each={chatList} fallback={<div>Chat Item</div>}>

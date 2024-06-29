@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"goChat/internal/utils"
 	"log"
 	"net/http"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 )
 
@@ -37,7 +37,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.Get("/user/create", s.RequireAuth(s.HandleNewUser))
 
 	// Chat routes
-	r.Get("/chat/get", s.RequireAuth(s.GetUserChats))
+	r.Get("/chats", s.RequireAuth(s.GetUserChats))
 
 	return r
 }
@@ -184,13 +184,8 @@ func (s *Server) GetUserData(w http.ResponseWriter, r *http.Request) {
 // HandleNewUser handles creation of user.
 // The user is added to the database if he logs in for the first time.
 func (s *Server) HandleNewUser(w http.ResponseWriter, r *http.Request) {
-	sessionVal, _ := sessionStore.Get(r, "goChat-session")
-	user, ok := sessionVal.Values["user"].(goth.User)
-	if !ok {
-		http.Redirect(w, r, "http://localhost:3000/auth/google", http.StatusTemporaryRedirect)
-		return
-	}
-	err := s.Db.AddNewUser(&user)
+	gothUser := utils.CheckAuthorization(w, r, *sessionStore)
+	err := s.Db.AddNewUser(gothUser)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Error in creating new user."))
@@ -200,14 +195,53 @@ func (s *Server) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "http://localhost:5173", http.StatusTemporaryRedirect)
 }
 
-// ============================= Chat Handlers ======================================
+func (s *Server) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	// Check for user authorization
+	_ = utils.CheckAuthorization(w, r, *sessionStore)
 
-func (s *Server) GetUserChats(w http.ResponseWriter, r *http.Request) {
-	sessionVal, _ := sessionStore.Get(r, "goChat-session")
-	_, ok := sessionVal.Values["user"].(goth.User)
-	if !ok {
-		http.Redirect(w, r, "http://localhost:3000/auth/google", http.StatusTemporaryRedirect)
+	userList, err := s.Db.GetAllUsers()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error in getting all users"))
 		return
 	}
 
+	json.NewEncoder(w).Encode(userList)
+}
+
+// ============================= Chat Handlers ======================================
+
+func (s *Server) GetUserChats(w http.ResponseWriter, r *http.Request) {
+	// Check for user authorization
+	gothUser := utils.CheckAuthorization(w, r, *sessionStore)
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	// Extract the uid
+	uid, err := s.Db.GetUserId(gothUser)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error in getting user id"))
+	}
+
+	// Get the user chats
+	userChats, err := s.Db.GetUserChats(uid)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error in getting all users"))
+		return
+	}
+	log.Println("User Chats: ", userChats)
+
+	data := map[string]any{
+		"status":    "0",
+		"userChats": userChats,
+	}
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Println("Error in marshalling jsonData. Err: ", err)
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.Write(jsonData)
 }

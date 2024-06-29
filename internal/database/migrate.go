@@ -1,14 +1,14 @@
 package database
 
 import (
-	"database/sql"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	"log"
 )
 
 func InitDB() {
 	// Create a connection
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname))
+	db, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname))
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.
@@ -17,14 +17,14 @@ func InitDB() {
 
 	query := `
 		CREATE TABLE IF NOT EXISTS users(
-			uid INT AUTO_INCREMENT,
-			username VARCHAR(63) NOT NULL,
-			email VARCHAR(63) NOT NULL UNIQUE,
+			uid VARCHAR(40) DEFAULT (uuid()),
+			provider VARCHAR(63) NOT NULL,
+			email VARCHAR(63) NOT NULL,
 			name VARCHAR(127) NOT NULL,
 			created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 			avatar VARCHAR(255),
-			about VARCHAR(255),
-			PRIMARY KEY (uid)	
+			PRIMARY KEY (uid),
+			INDEX (provider, email)
 		);
 	`
 	_, err = db.Exec(query)
@@ -39,7 +39,7 @@ func InitDB() {
 			name VARCHAR(63),
 			descr VARCHAR(255),
 			last_message_ts DATETIME DEFAULT CURRENT_TIMESTAMP,
-			uid INT NOT NULL,
+			uid varchar(40) NOT NULL,
 			PRIMARY KEY (id),
 			FOREIGN KEY (uid) REFERENCES users(uid),
 			INDEX (uid)
@@ -56,7 +56,7 @@ func InitDB() {
 			id INT AUTO_INCREMENT,
 			content BLOB,
 			timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-			from_uid INT NOT NULL,
+			from_uid varchar(40) NOT NULL,
 			channel_id INT,
 			PRIMARY KEY (id),
 			FOREIGN KEY (from_uid) REFERENCES users(uid),
@@ -77,27 +77,3 @@ func InitDB() {
 	}
 	log.Printf("Successfully initialized the database")
 }
-
-// func ExecuteSQL(db *sql.DB, sqlFile string) error {
-// 	file, err := os.ReadFile(sqlFile)
-// 	if err != nil {
-// 		log.Printf("Error in reading sql file. Err: %v\n", err)
-// 		return err
-// 	}
-// 	tx, err := db.Begin()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer func() {
-// 		tx.Rollback()
-// 	}()
-//
-// 	// Execute all
-// 	_, err = db.Exec(string(file))
-// 	if err != nil {
-// 		log.Printf("Error in executing sql file. err: %v\n", err)
-// 		return err
-// 	}
-//
-// 	return tx.Commit()
-// }
