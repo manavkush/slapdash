@@ -3,7 +3,8 @@ name: Build CI
 
 on:
   pull_request:
-    branches: ["v2"]
+    branches: 
+      - v2
 
 jobs:
   build_pull_request:
