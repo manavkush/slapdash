@@ -2,8 +2,9 @@
 name: Build CI
 
 on:
-  push:
-    branches: ["v2"]
+  pull_request:
+    branches: 
+      - v2
 
 jobs:
   build_pull_request:
