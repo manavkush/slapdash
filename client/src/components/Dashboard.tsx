@@ -7,7 +7,7 @@ const [chatList] = createResource(fetchChats)
 const [currentChat, setCurrentChat] = createSignal<null | string>(null)
 
 async function fetchChats() {
-  const response = await fetch("http://localhost:3000/chats", {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/chats`, {
     credentials: 'include'
   })
   const responseJson = await response.json()
