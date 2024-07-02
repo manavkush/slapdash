@@ -11,9 +11,6 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Login to Dockerhub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
       - name: Pull Docker image
         run: sudo docker pull manavkush/slapdash-backend:latest
 
@@ -21,5 +18,5 @@ jobs:
         run: sudo docker rm -f slapdash-backend-container || true
 
       - name: Run docker container
-        run: sudo docker run -d -p 8080:8080 -name slapdash-backend-container manavkush/slapdash-backend
+        run: sudo docker run -d -p 8080:8080 --name slapdash-backend-container manavkush/slapdash-backend
   
