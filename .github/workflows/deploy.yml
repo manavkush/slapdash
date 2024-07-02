@@ -1,0 +1,22 @@
+
+name: Deploy CD
+
+on:
+  workflow_run:
+    workflows: ["Build CI"]
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: Pull Docker image
+        run: sudo docker pull manavkush/slapdash-backend:latest
+
+      - name: Delete Old docker container
+        run: sudo docker rm -f slapdash-backend-container || true
+
+      - name: Run docker container
+        run: sudo docker run -d -p 8080:8080 -name slapdash-backend-container manavkush/slapdash-backend
+  
