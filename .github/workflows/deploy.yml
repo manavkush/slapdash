@@ -8,9 +8,12 @@ on:
       - completed
 
 jobs:
-  build:
+  deploy:
     runs-on: self-hosted
     steps:
+      - name: Login to Dockerhub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Pull Docker image
         run: sudo docker pull manavkush/slapdash-backend:latest
 
