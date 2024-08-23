@@ -18,14 +18,14 @@ const (
 )
 
 func NewAuth() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	godotenv.Load()
 
 	// Load the secrets
 	googleClientId := os.Getenv("GOOGLE_CLIENT_ID")
 	googleClientSecret := os.Getenv("GOOGLE_CLIENT_SECRET")
+	if googleClientId == "" || googleClientSecret == "" {
+		log.Fatal("Error in loading the auth env variables")
+	}
 
 	store := sessions.NewCookieStore([]byte(key))
 	store.MaxAge(MaxAge)

@@ -3,11 +3,13 @@ package database
 import (
 	"context"
 	"fmt"
-	"github.com/jmoiron/sqlx"
+	"goChat/internal/models"
 	"log"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/joho/godotenv/autoload"
@@ -23,6 +25,7 @@ type Service interface {
 	GetAllUsers() ([]UserInfo, error)
 	GetUserChats(string) ([]ChatMetadata, error)
 	GetUserId(*goth.User) (string, error)
+	GetChannel(string) (models.Channel, error)
 
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
@@ -63,7 +66,8 @@ func New() Service {
 	}
 
 	// Opening a driver typically will not attempt to connect to the database.
-	db, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname))
+	dbUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname)
+	db, err := sqlx.Open("mysql", dbUrl)
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.
@@ -219,4 +223,8 @@ func (s *service) GetAllUsers() ([]UserInfo, error) {
 	}
 
 	return usersList, nil
+}
+
+func (s *service) GetChannel(channelId string) (models.Channel, error) {
+	return models.Channel{}, nil
 }

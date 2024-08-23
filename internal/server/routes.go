@@ -12,6 +12,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/gorilla/websocket"
 	"github.com/markbates/goth/gothic"
 )
 
@@ -40,6 +41,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	// Chat routes
 	r.Get("/chats", s.RequireAuth(s.GetUserChats))
 
+	// Websocket route
+	r.Get("/ws", s.RequireAuth(s.HandleWebSocket))
 	return r
 }
 
@@ -243,4 +246,31 @@ func (s *Server) GetUserChats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(jsonData)
+}
+
+// ================================ Websocket Handlers ==========================
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+func (s *Server) HandleWebSocket(w http.ResponseWriter, r *http.Request) {
+	gothUser := utils.CheckAuthorization(w, r, *sessionStore)
+	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("FRONTEND_URI"))
+	w.Header().Set("Access-Control-Allow-Credentials", "true")
+
+	// Extract the uid
+	// uid, err := s.Db.GetUserId(gothUser)
+	_, err := s.Db.GetUserId(gothUser)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error in getting user id"))
+	}
+
+	// conn, err := upgrader.Upgrade(w, r, nil)
+	_, err = upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("Error in upgrading to websocket connection. err: %v\n", err)
+		return
+	}
 }

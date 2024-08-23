@@ -8,7 +8,8 @@ import (
 
 func InitDB() {
 	// Create a connection
-	db, err := sqlx.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname))
+	dbUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname)
+	db, err := sqlx.Open("mysql", dbUrl)
 	if err != nil {
 		// This will not be a connection error, but a DSN parse error or
 		// another initialization error.
@@ -29,7 +30,7 @@ func InitDB() {
 	`
 	_, err = db.Exec(query)
 	if err != nil {
-		log.Printf("Error in creating users table. %v\n", err)
+		log.Printf("Error in creating users table. Url: %v Err: %v\n", dbUrl, err)
 		return
 	}
 
