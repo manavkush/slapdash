@@ -1,17 +1,39 @@
-version: '3.8'
-
 services:
-  mysql:
+  slapdash-backend:
+    build: .
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+    networks:
+      - "mynet"
+    env_file:
+        - .env
+
+  database:
     image: mysql:latest
+    container_name: "db-mysql"
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - mysql_volume:/var/lib/mysql
+    networks:
+        - "mynet"
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -h localhost -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD" ]
+      interval: 5s
+      retries: 5
+      timeout: 5s
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    ports:
-      - "${DB_PORT}:3306"
-    volumes:
-      - mysql_volume:/var/lib/mysql
 
 volumes:
   mysql_volume:
+
+networks:
+  mynet:

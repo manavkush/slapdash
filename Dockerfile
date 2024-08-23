@@ -1,19 +1,19 @@
-FROM golang:1.22-alpine
+FROM golang:1.22-alpine as base
+# Install system dependencies including 'make'
+RUN apk update && apk add --no-cache gcc libc-dev make
+
+FROM base as builder
 WORKDIR /app
-
-RUN apk --no-cache add gcc g++ make git
-
-COPY ./go.mod ./go.sum ./
-
-RUN go mod tidy
-
+COPY go.* ./
+RUN go mod download
 COPY . .
-
 RUN make build
 
-RUN chmod +x main
 
+FROM alpine
+RUN apk add ca-certificates
+COPY --from=builder /app/main /app/main
 EXPOSE 3000
 
-CMD ["./main"]
+CMD ["/app/main"]
 
