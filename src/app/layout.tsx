@@ -1,11 +1,10 @@
-import Link from "next/link";
 import "./globals.css";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.css";
 import Navbar from "../components/Navbar/Navbar";
 import { NextAuthProvider } from "./providers";
 import { GlobalContextProvider } from "../context/GlobalContext";
-import {SpeedInsights} from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,14 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} ${spaceGrotesk.className}`}>
-          <NextAuthProvider>
-            <GlobalContextProvider>
-              <Navbar />
-              {children}
-            </GlobalContextProvider>
-          </NextAuthProvider>
-          <SpeedInsights />
-          <Analytics />
+        <NextAuthProvider>
+          <GlobalContextProvider>
+            <Navbar />
+            {children}
+          </GlobalContextProvider>
+        </NextAuthProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

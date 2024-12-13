@@ -1,16 +1,22 @@
 # Slapdash
-![slapdash](https://github.com/manavkush/slapdash/assets/64668859/ba98e4d9-e877-4a61-bb99-ea9348579f2a)
 
+![slapdash](https://github.com/manavkush/slapdash/assets/64668859/ba98e4d9-e877-4a61-bb99-ea9348579f2a)
 
 ## Getting Started
 
-First, run the development server:
+First, install the packages using the following:
+
+```bash
+npm install
+# or
+pnpm install
+```
+
+Then run the project using:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
+or
 pnpm dev
 ```
 
